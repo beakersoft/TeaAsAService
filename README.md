@@ -7,13 +7,13 @@ Spec Proposal
 
 So the first simple step is RESTful API that with a couple of methods on it
 
-HadBrew - Post to this when you have had a brew. If you send an identifier up to it then it will just increment your brew count for the day (reset at midnight), if you don't send an identifier it will create one and send it you back.
+`HadBrew` - Post to this when you have had a brew. If you send an identifier up to it then it will just increment your brew count for the day (reset at midnight), if you don't send an identifier it will create one and send it you back.
 
-BrewedUp Post to this when someone gets a round in. Send it the round identifier and who made it and how many they made. If no round identifier  is send a new one will be created and sent back.
+`BrewedUp` Post to this when someone gets a round in. Send it the round identifier and who made it and how many they made. If no round identifier  is send a new one will be created and sent back.
 
-Brews - Get method you send an identifier  to that will give you back you current brew stats
+`Brews` - Get method you send an identifier  to that will give you back you current brew stats
 
-NextRound - Get method to see who's been getting the round in over a time period.
+`NextRound` - Get method to see who's been getting the round in over a time period.
 
 Tech
 
