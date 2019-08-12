@@ -3,11 +3,13 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.26124.0
 MinimumVisualStudioVersion = 15.0.26124.0
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tea.Core", "Tea.Core\Tea.Core.csproj", "{CE7EBB52-4FAF-4480-BBA4-3E89AA47BE5E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tea.Core", "Tea.Core\Tea.Core.csproj", "{CE7EBB52-4FAF-4480-BBA4-3E89AA47BE5E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tea.Test", "Tea.Test\Tea.Test.csproj", "{A0C9D1D6-7733-4A0E-B2B6-77EEF7AADFCC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tea.Test", "Tea.Test\Tea.Test.csproj", "{A0C9D1D6-7733-4A0E-B2B6-77EEF7AADFCC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tea.Web", "Tea.Web\Tea.Web.csproj", "{892CA723-3D48-4DF8-930C-3F18F0E3F2C5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tea.Web", "Tea.Web\Tea.Web.csproj", "{892CA723-3D48-4DF8-930C-3F18F0E3F2C5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tea.Core.Impl", "Tea.Core.Impl\Tea.Core.Impl.csproj", "{69F757D4-5E41-4A1F-85CD-5532A90D2B90}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -17,9 +19,6 @@ Global
 		Release|Any CPU = Release|Any CPU
 		Release|x64 = Release|x64
 		Release|x86 = Release|x86
-	EndGlobalSection
-	GlobalSection(SolutionProperties) = preSolution
-		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{CE7EBB52-4FAF-4480-BBA4-3E89AA47BE5E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -58,5 +57,23 @@ Global
 		{892CA723-3D48-4DF8-930C-3F18F0E3F2C5}.Release|x64.Build.0 = Release|Any CPU
 		{892CA723-3D48-4DF8-930C-3F18F0E3F2C5}.Release|x86.ActiveCfg = Release|Any CPU
 		{892CA723-3D48-4DF8-930C-3F18F0E3F2C5}.Release|x86.Build.0 = Release|Any CPU
+		{69F757D4-5E41-4A1F-85CD-5532A90D2B90}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{69F757D4-5E41-4A1F-85CD-5532A90D2B90}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{69F757D4-5E41-4A1F-85CD-5532A90D2B90}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{69F757D4-5E41-4A1F-85CD-5532A90D2B90}.Debug|x64.Build.0 = Debug|Any CPU
+		{69F757D4-5E41-4A1F-85CD-5532A90D2B90}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{69F757D4-5E41-4A1F-85CD-5532A90D2B90}.Debug|x86.Build.0 = Debug|Any CPU
+		{69F757D4-5E41-4A1F-85CD-5532A90D2B90}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{69F757D4-5E41-4A1F-85CD-5532A90D2B90}.Release|Any CPU.Build.0 = Release|Any CPU
+		{69F757D4-5E41-4A1F-85CD-5532A90D2B90}.Release|x64.ActiveCfg = Release|Any CPU
+		{69F757D4-5E41-4A1F-85CD-5532A90D2B90}.Release|x64.Build.0 = Release|Any CPU
+		{69F757D4-5E41-4A1F-85CD-5532A90D2B90}.Release|x86.ActiveCfg = Release|Any CPU
+		{69F757D4-5E41-4A1F-85CD-5532A90D2B90}.Release|x86.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {2C2B2C9C-1124-465D-AE6D-6938D979DD26}
 	EndGlobalSection
 EndGlobal
