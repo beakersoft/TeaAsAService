@@ -5,6 +5,11 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="AWSSDK.DynamoDBv2" Version="3.3.101.56" />
+    <PackageReference Include="AWSSDK.Extensions.NETCore.Setup" Version="3.3.100.1" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\Tea.Core\Tea.Core.csproj" />
   </ItemGroup>
 

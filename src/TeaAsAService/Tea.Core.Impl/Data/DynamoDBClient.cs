@@ -7,5 +7,9 @@ namespace Tea.Core.Impl.Data
 {
     public class DynamoDBClient : IDynamoDBClient
     {
+
+
+
+
     }
 }

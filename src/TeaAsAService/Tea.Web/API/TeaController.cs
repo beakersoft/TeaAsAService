@@ -1,17 +1,20 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
+﻿using Amazon.DynamoDBv2;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Tea.Web.API
 {
-    [Route("api/[controller]")]
-    [ApiVersion("1.0")]
+    [ApiVersion("1.0")]        
+    [Route("api/v{version:apiVersion}/[controller]")]
     [ApiController]
     public class TeaController : ControllerBase
     {
+        private readonly IAmazonDynamoDB _amazonDynamoDb;
+
+        public TeaController(IAmazonDynamoDB amazonDynamoDb)
+        {
+            _amazonDynamoDb = amazonDynamoDb;
+        }
+
         [HttpPost]
         public IActionResult Add()
         {
@@ -27,9 +30,6 @@ namespace Tea.Web.API
             //if we have rolled over midnight copy todays brew into brew summary table
             return Ok();
         }
-
-
-
 
         [HttpGet]
         [Route("get/{id}")]
