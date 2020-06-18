@@ -1,12 +1,25 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using Microsoft.EntityFrameworkCore;
+using System;
+using System.Threading.Tasks;
+using Tea.Core.Entity;
 
 namespace Tea.Core.Data
 {
-    public interface IDynamoDBClient
+    public interface IDataStore
     {
+        Task<User> GetUserAsync(Guid Id);       //pass the actuall guid
+        Task<User> GetUserAsync(string Id);     //pass the sortname
+        Task<User> UpdateBrewCount(string id);
+        Task<User> CreateNewUserAsync(string LocalizationString);
 
 
-    }
+
+            //create user
+            //create history
+            //update user
+            //create round
+            //update round
+
+
+        }
 }

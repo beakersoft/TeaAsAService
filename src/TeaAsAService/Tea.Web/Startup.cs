@@ -1,9 +1,14 @@
 ﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Tea.Web.Configuration;
+using Microsoft.Extensions.Hosting;
+using Tea.Core.Impl.Data;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Mvc;
+using Tea.Core.Data;
+using Tea.Core.Impl;
 
 namespace Tea.Web
 {
@@ -15,21 +20,24 @@ namespace Tea.Web
         }
 
         public IConfiguration Configuration { get; }
-
-        // This method gets called by the runtime. Use this method to add services to the container.
+        
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_3_0);
+            services.AddRazorPages();
 
+            services.AddDbContext<TeaContext>(options =>
+                    options.UseMySQL(Configuration.GetConnectionString("DefaultConnection")));
 
             services
+                .AddScoped<IDataStore, DataStore>()
                 .AddDynamoDBClient(Configuration)
-                .AddApiVersioningConfig();
-            
+                .AddApiVersioningConfig()
+                .AddSwagger()
+                .AddControllers();
         }
 
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             if (env.IsDevelopment())
             {
@@ -37,13 +45,26 @@ namespace Tea.Web
             }
             else
             {
-                // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
+                app.UseExceptionHandler("/Error");
                 app.UseHsts();
             }
 
-
             app.UseHttpsRedirection();
-            app.UseMvc();
+            app.UseStaticFiles();
+            app.UseRouting();
+
+            app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapRazorPages();
+                endpoints.MapControllers();
+            });
+
+            app.UseSwagger();
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("./v1/swagger.json", "TeaAsAService");
+            });
+
         }
     }
 }

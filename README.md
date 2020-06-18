@@ -17,11 +17,9 @@ So the first simple step is RESTful API that with a couple of methods on it
 
 Tech
 
-So, as a mainly c# guy I was thinking of writing the API in netcore 2.2 c#. Not sure where to host it or what DB to use yet, need something fast and hopefully free.
+So, as a mainly c# guy I was thinking of writing the API in netcore 3.1 c#. The database back end is on MySql, need to work out a way to do the data migrations. Might do them manually in prod
 
 Then the first client I was thinking of making was a command line app to run in WLS/Linux or power shell, call Tea++ that you just call every time you have a brew or pass an arg to when someone gets a round in
-
-And that's kind of it. Hopefully I can make a start on actually writing it next week
 
 All ideas welcome!
 

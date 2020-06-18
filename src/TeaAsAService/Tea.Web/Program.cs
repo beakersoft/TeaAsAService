@@ -2,7 +2,10 @@
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using Serilog;
+using Tea.Core.Impl.Data;
 using ILogger = Serilog.ILogger;
 
 namespace Tea.Web
@@ -29,10 +32,26 @@ namespace Tea.Web
                 .Build();
 
             ConfiguredEnvironment = string.IsNullOrEmpty(Configuration["Environment"]) ? "local" : Configuration["Environment"];
-
             Log.Logger = CreateLogger();
+            
+            var host = CreateWebHostBuilder(args).Build();
 
-            CreateWebHostBuilder(args).Build().Run();
+            using (var scope = host.Services.CreateScope())
+            {
+                var services = scope.ServiceProvider;
+                try
+                {
+                    var context = services.GetRequiredService<TeaContext>();
+                    DbInitializer.Initialize(context);
+                }
+                catch (Exception ex)
+                {
+                    var logger = services.GetRequiredService<ILogger<Program>>();
+                    logger.LogError(ex, "An error occurred while seeding the database.");
+                }
+            }
+
+            host.Run();
         }
 
         public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
@@ -47,7 +66,6 @@ namespace Tea.Web
                 .Enrich.WithProperty("Application", "Tea.Web")
                 .Enrich.WithProperty("env", ConfiguredEnvironment)
                 .WriteTo.Console()
-                
                 .MinimumLevel.Information();
 
             if (IsLocal)

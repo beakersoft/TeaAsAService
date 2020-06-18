@@ -2,10 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using Microsoft.OpenApi.Models;
 
 namespace Tea.Web.Configuration
 {
@@ -32,7 +29,6 @@ namespace Tea.Web.Configuration
                 services.AddAWSService<IAmazonDynamoDB>();
             }
 
-
             return services;
         }
 
@@ -47,7 +43,15 @@ namespace Tea.Web.Configuration
             return services;
         }
 
+        public static IServiceCollection AddSwagger(this IServiceCollection services)
+        {
+            services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "TeaAsAService", Version = "v1" });
+            });
 
+            return services;
+        }
 
 
     }
