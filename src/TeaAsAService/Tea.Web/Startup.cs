@@ -9,6 +9,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Mvc;
 using Tea.Core.Data;
 using Tea.Core.Impl;
+using Microsoft.AspNetCore.Authentication;
+using Tea.Web.Helpers;
 
 namespace Tea.Web
 {
@@ -24,14 +26,15 @@ namespace Tea.Web
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_3_0);
-            services.AddRazorPages();
-
+            
             services.AddDbContext<TeaContext>(options =>
                     options.UseMySQL(Configuration.GetConnectionString("DefaultConnection")));
 
+            services.AddAuthentication("BasicAuthentication")
+                .AddScheme<AuthenticationSchemeOptions, BasicAuthenticationHandler>("BasicAuthentication", null);
+
             services
-                .AddScoped<IDataStore, DataStore>()
-                .AddDynamoDBClient(Configuration)
+                .AddScoped<IDataStore, DataStore>()                
                 .AddApiVersioningConfig()
                 .AddSwagger()
                 .AddControllers();
@@ -52,6 +55,9 @@ namespace Tea.Web
             app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseRouting();
+
+            app.UseAuthentication();
+            app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
             {

@@ -16,20 +16,10 @@ namespace Tea.Core.Impl
             _context = context;
         }
 
-        public async Task<User> CreateNewUserAsync(string LocalizationString)
-        {
-            var userId = Guid.NewGuid();
-            var simpleId = Convert.ToBase64String(userId.ToByteArray());
-
-            var user = new User
-            {
-                Id = userId,
-                Localization = LocalizationString,
-                SimpleId = simpleId,
-                CurrentDayCount = 1,
-                LastTimeUtc = DateTime.UtcNow
-            };
-
+        public async Task<User> CreateNewUserAsync(string LocalizationString, string password)
+        {            
+            var user = User.CreateNewUser(LocalizationString, password);
+            
             _context.Users.Add(user);
             await _context.SaveChangesAsync();
 
@@ -53,6 +43,17 @@ namespace Tea.Core.Impl
 
 
             return user;
+        }
+
+        public async Task<User> Authenticate(string username, string password)
+        {
+            var user = await _context.Users.SingleOrDefaultAsync(x => x.SimpleId == username && x.Password == password);
+
+            if (user == null)
+                return null;
+            
+            return user;
+           
         }
 
         public Task<User> GetUserAsync(Guid Id)

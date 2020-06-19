@@ -12,15 +12,8 @@ namespace Tea.Core.Impl.Data
 
             if (context.Users.Any())            
                 return;   // DB has been seeded
-
-            var user = new User()
-            {
-                Id = Guid.NewGuid(),
-                CurrentDayCount = 0,
-                EmailAddress = "test@domain.com"
-            };
-
-            context.Users.Add(user);
+            
+            context.Users.Add(User.CreateLocalDevUser());
             context.SaveChanges();
         }
     }

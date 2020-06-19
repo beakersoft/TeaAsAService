@@ -23,3 +23,7 @@ Then the first client I was thinking of making was a command line app to run in 
 
 All ideas welcome!
 
+# Running Tea as a service in Dev
+To run this project we need a MySql server running to host our database on. Luckly this is easy to create using a docker container. Open a terminal and from the build folder just run docker-compose up -d to start a MySql docker instance. The connection string in the application should be setup to use this instance once its started, and the database will created on first load and seeded with a test user we can use to test the API
+
+Test user id is 7EmMT6n3f0i/YniN6osJXQ== password TestPassword123*           
