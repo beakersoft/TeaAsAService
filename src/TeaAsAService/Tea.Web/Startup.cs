@@ -11,6 +11,7 @@ using Tea.Core.Data;
 using Tea.Core.Impl;
 using Microsoft.AspNetCore.Authentication;
 using Tea.Web.Helpers;
+using AspNetCoreRateLimit;
 
 namespace Tea.Web
 {
@@ -29,14 +30,17 @@ namespace Tea.Web
             
             services.AddDbContext<TeaContext>(options =>
                     options.UseMySQL(Configuration.GetConnectionString("DefaultConnection")));
-
+            
             services.AddAuthentication("BasicAuthentication")
                 .AddScheme<AuthenticationSchemeOptions, BasicAuthenticationHandler>("BasicAuthentication", null);
-
+            
             services
+                .AddOptions()
                 .AddScoped<IDataStore, DataStore>()                
                 .AddApiVersioningConfig()
+                .AddRateLimiting(Configuration)
                 .AddSwagger()
+                .AddHttpContextAccessor()
                 .AddControllers();
         }
 
@@ -52,6 +56,7 @@ namespace Tea.Web
                 app.UseHsts();
             }
 
+            app.UseIpRateLimiting();
             app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseRouting();

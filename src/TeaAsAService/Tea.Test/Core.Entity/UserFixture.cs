@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Threading.Tasks;
-using Tea.Core.Entity;
+﻿using Tea.Core.Entity;
 using Xunit;
 
 namespace Tea.Test.Core.Entity

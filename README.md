@@ -3,6 +3,9 @@ Track your Brews!
 So just for a change the other day at work we were discussing who's turn it was to make a brew. A discussion I'm sure goes on in businesses across the globe.
 Being a Dev I started to wonder if anyone had ever thought about ways to track your daily brew intake, and who turn it was to make the next one. A quick google revealed nothing, so i thought it might be a fun idea to make one. 
 
+![.NET Core](https://github.com/beakersoft/TeaAsAService/workflows/.NET%20Core/badge.svg)
+
+
 Spec Proposal 
 
 So the first simple step is RESTful API that with a couple of methods on it
@@ -23,7 +26,16 @@ Then the first client I was thinking of making was a command line app to run in 
 
 All ideas welcome!
 
-# Running Tea as a service in Dev
-To run this project we need a MySql server running to host our database on. Luckly this is easy to create using a docker container. Open a terminal and from the build folder just run docker-compose up -d to start a MySql docker instance. The connection string in the application should be setup to use this instance once its started, and the database will created on first load and seeded with a test user we can use to test the API
+# Dev Installation
+
+First of all, clone the project as normal, 
+
+git clone git@github.com:beakersoft/TeaAsAService.git
+
+To run this project we need a MySql server running to host our database on. Luckly this is easy to create using a docker container. Open a terminal and from the build folder just run 
+
+docker-compose up -d
+
+to start a MySql docker instance. The connection string in the application should be setup to use this instance once its started, and the database will created on first load and seeded with a test user we can use to test the API
 
 Test user id is 7EmMT6n3f0i/YniN6osJXQ== password TestPassword123*           

@@ -1,4 +1,5 @@
 ﻿using Amazon.DynamoDBv2;
+using AspNetCoreRateLimit;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -29,6 +30,16 @@ namespace Tea.Web.Configuration
             return services;
         }
 
+        public static IServiceCollection AddRateLimiting(this IServiceCollection services, IConfiguration Configuration)
+        {
+            services.AddMemoryCache();
+            services.Configure<IpRateLimitOptions>(Configuration.GetSection("IpRateLimiting"));
+            services.AddSingleton<IIpPolicyStore, MemoryCacheIpPolicyStore>();
+            services.AddSingleton<IRateLimitCounterStore, MemoryCacheRateLimitCounterStore>();
+            services.AddSingleton<IRateLimitConfiguration, RateLimitConfiguration>();
+
+            return services;
+        }
 
     }
 }
