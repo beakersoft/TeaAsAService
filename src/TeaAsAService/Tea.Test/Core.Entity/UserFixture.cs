@@ -1,4 +1,5 @@
-﻿using Tea.Core.Entity;
+﻿using System;
+using Tea.Core.Entity;
 using Xunit;
 
 namespace Tea.Test.Core.Entity
@@ -14,7 +15,24 @@ namespace Tea.Test.Core.Entity
 
             Assert.Equal(password, user.Password);
             Assert.Equal(locstring, user.Localization);
+        }
 
+        [Fact]
+        public void CreateHistoryEntry_ReturnsValid()
+        {
+            var noOfBrews = 5;
+
+            var dummyUser = new User
+            {
+                Id = Guid.NewGuid(),
+                LastTimeUtc = DateTime.UtcNow.AddHours(-1),
+                CurrentDayCount = noOfBrews
+            };
+
+            var historyEntry = dummyUser.CreateHistoryEntry();
+
+            Assert.Equal(noOfBrews, historyEntry.CountForDate);
+            Assert.Equal(0, dummyUser.CurrentDayCount);
         }
     }
 }

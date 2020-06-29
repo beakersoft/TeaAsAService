@@ -25,22 +25,23 @@ namespace Tea.Core.Impl
 
             return user;
         }
-        public async Task<User> UpdateBrewCount(string id)
+
+        public async Task<User> UpdateBrewCount(string Id)
         {
-            var user = await _context.Users.FirstOrDefaultAsync(x=>x.SimpleId == id);
+            var user = await _context.Users.FirstOrDefaultAsync(x=>x.SimpleId == Id);
 
             if (user == null)
                 return null;
 
-
-            //WE NEED TO MAKE SURE WE UPDATE THE HISTORY AND RESET THE COUNT IF WE HAVE ROLLED A DAY
-
+            if (user.CurrentDayCount > 0 && (DateTime.UtcNow.Subtract(user.LastTimeUtc).TotalDays >= 1))
+            {
+                var histEntry = user.CreateHistoryEntry();
+                _context.Add(histEntry);
+            }
 
             user.CurrentDayCount++;
+            user.LastTimeUtc = DateTime.UtcNow;
             await _context.SaveChangesAsync();
-
-
-
 
             return user;
         }
@@ -56,16 +57,11 @@ namespace Tea.Core.Impl
            
         }
 
-        public Task<User> GetUserAsync(Guid Id)
+        public async Task<User> GetUserAsync(string Id)
         {
-            throw new NotImplementedException();
+            return await _context.Users
+                .Include(user => user.History)
+                .FirstOrDefaultAsync(x => x.SimpleId == Id);
         }
-
-        public Task<User> GetUserAsync(string Id)
-        {
-            throw new NotImplementedException();
-        }
-
-        
     }
 }

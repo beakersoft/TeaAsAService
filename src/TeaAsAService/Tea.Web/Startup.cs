@@ -33,15 +33,19 @@ namespace Tea.Web
             
             services.AddAuthentication("BasicAuthentication")
                 .AddScheme<AuthenticationSchemeOptions, BasicAuthenticationHandler>("BasicAuthentication", null);
-            
+
             services
                 .AddOptions()
                 .AddScoped<IDataStore, DataStore>()                
                 .AddApiVersioningConfig()
                 .AddRateLimiting(Configuration)
                 .AddSwagger()
-                .AddHttpContextAccessor()
-                .AddControllers();
+                .AddHttpContextAccessor();
+
+            services.AddControllersWithViews()
+                .AddNewtonsoftJson(options =>
+                options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
+            );
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

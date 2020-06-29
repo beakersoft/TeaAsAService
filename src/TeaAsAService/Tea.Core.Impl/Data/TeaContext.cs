@@ -19,18 +19,19 @@ namespace Tea.Core.Impl.Data
             modelBuilder.Entity<User>().ToTable("User");
             modelBuilder.Entity<History>().ToTable("History");
 
-            modelBuilder.Entity<History>(entity =>
-            {
-                entity.HasKey(e => e.Id);
-                entity.Property(e => e.HistoryDate).IsRequired();
-            });
-
             modelBuilder.Entity<User>(entity =>
             {
-                entity.HasKey(e => e.Id);                
+                entity.HasKey(e => e.Id);
                 entity.HasMany(d => d.History)
                   .WithOne(p => p.User);
             });
+
+            modelBuilder.Entity<History>(entity =>
+            {
+                entity.HasKey(e => e.Id);
+            });
+
+            
         }
 
         

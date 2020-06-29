@@ -5,9 +5,10 @@ using System.Linq;
 using System.Threading.Tasks;
 using Tea.Core.Data;
 using Tea.Core.Impl.Services;
+using Tea.Web.Models;
 
 namespace Tea.Web.API
-{    
+{
     [ApiVersion("1.0")]
     [Authorize]
     [Route("api/[controller]")]
@@ -23,13 +24,11 @@ namespace Tea.Web.API
 
         [HttpPost]
         [AllowAnonymous]
-        [Route("hadbrew")]
-        public async Task<IActionResult> HadBrew()
+        [Route("NewPersonHadBrew")]
+        public async Task<IActionResult> NewPersonHadBrew()
         {
-
-            //LPN get the actuak local out so we know when to create a history entry
             var localizationString = HttpContext.Request.GetTypedHeaders()
-                .AcceptLanguage.OrderBy(x=>x.Quality ?? 0.1).FirstOrDefault()?.Value.ToString()
+                .AcceptLanguage.OrderByDescending(x=>x.Quality ?? 0.1).FirstOrDefault()?.Value.ToString()
                 ?? "en-GB";
             
             var user = await _dataStore.CreateNewUserAsync(localizationString, RandomPasswordGenerator.GeneratePassword(16));
@@ -37,25 +36,33 @@ namespace Tea.Web.API
         }
 
         [HttpPost]        
-        [Route("hadbrew/{id}")] //LPN THIS NEEDS TO BE FROM BODY
-        public async Task<IActionResult> HadBrew(string id)
-        {            
-            var user = await _dataStore.UpdateBrewCount(id);
+        [Route("hadbrew")]
+        public async Task<IActionResult> HadBrew([FromBody] UserHadBrew model)
+        {
+            if(string.IsNullOrEmpty(model.UserId))           
+                return NotFound("Please pass a user id");
+            
+            var user = await _dataStore.UpdateBrewCount(model.UserId);
 
             if (user == null)            
-                return NotFound();
-            
-            //if we have rolled over midnight copy todays brew into brew summary table
-            return Ok(user);
+                return NotFound($"Nothing found for user id {model.UserId}");
+
+            return Ok();
         }
 
         [HttpGet]        
-        [Route("brews/{id}")]
-        public IActionResult Brews(string id)
+        [Route("brews")]
+        public async Task<IActionResult> Brews([FromBody] UserHadBrew model)
         {
-            
+            if (string.IsNullOrEmpty(model.UserId))
+                return NotFound("Please pass a user id");
 
-            return Ok();
+            var user = await _dataStore.GetUserAsync(model.UserId);
+
+            if (user == null)
+                return NotFound($"Nothing found for user id {model.UserId}");
+
+            return Ok(user);
         }
     }
 }

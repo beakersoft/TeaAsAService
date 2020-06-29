@@ -2,9 +2,7 @@
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.Configuration;
 using System;
-using System.Collections.Generic;
 using System.Net.Http;
-using System.Text;
 using Tea.Web;
 
 namespace Tea.Test.Web

@@ -1,17 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Security;
 
 namespace Tea.Core.Entity
 {
     public class User
     {
-        public User()
-        {
-            History = new List<History>();
-        }
-
         [Key]
         public Guid Id { get; set; }
         [Required]
@@ -21,9 +15,25 @@ namespace Tea.Core.Entity
         [EmailAddress]
         public string EmailAddress { get; set; }
         public string Localization { get; set; }
+        [Required]
         public DateTime LastTimeUtc { get; set; }
         public int CurrentDayCount { get; set; }
-        public virtual ICollection<History> History { get;set;}
+        public ICollection<History> History { get; set;}
+
+        public History CreateHistoryEntry()
+        {
+            var entry = new History
+            {
+                Id = Guid.NewGuid(),
+                CountForDate = CurrentDayCount,
+                HistoryDate = LastTimeUtc.Date,
+                User = this
+            };
+
+            CurrentDayCount = 0;
+
+            return entry;
+        }
 
         public static User CreateNewUser(string localizationString, string password)
         {

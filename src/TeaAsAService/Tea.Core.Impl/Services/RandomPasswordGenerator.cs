@@ -12,15 +12,15 @@ namespace Tea.Core.Impl.Services
         public static string GeneratePassword(int passwordSize)
         {
             char[] _password = new char[passwordSize];
-            var charSet = ""; 
-            System.Random _random = new Random();
-            var counter = 0;
-
+            var charSet = string.Empty; 
+            Random _random = new Random();
+            
             charSet += LOWER_CASE;
             charSet += UPPER_CAES;
             charSet += NUMBERS;
             charSet += SPECIALS;
 
+            int counter;
             for (counter = 0; counter < passwordSize; counter++)
             {
                 _password[counter] = charSet[_random.Next(charSet.Length - 1)];
