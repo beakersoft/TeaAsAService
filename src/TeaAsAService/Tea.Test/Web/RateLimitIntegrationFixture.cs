@@ -15,8 +15,8 @@ namespace Tea.Test.Web
             _httpClient  = new TestServerBase().Client;
         }
 
-        //[LocalOnlyFact]
-        [Fact(Skip ="Skip until can work out how to ignore on CI")]
+        [LocalOnlyFact]
+        //[Fact(Skip ="Skip until can work out how to ignore on CI")]
         public async Task Test_LimitHit_TeaContoller()
         {
             var numberOfTimes = new List<int> { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };            
