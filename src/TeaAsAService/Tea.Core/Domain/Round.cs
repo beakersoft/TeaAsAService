@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Tea.Core.Entity
+namespace Tea.Core.Domain
 {
     public class Round
     {
@@ -10,5 +10,7 @@ namespace Tea.Core.Entity
         public IEnumerable<User> Users { get; private set; }
         public DateTime LastRoundTime { get; private set; }
         public User LastBrewMaker { get; private set; }
+
+        //location
     }
 }

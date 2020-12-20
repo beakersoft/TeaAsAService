@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Tea.Core.Data;
-using Tea.Core.Entity;
+using Tea.Core.Domain;
 
 namespace Tea.Web.Helpers
 {

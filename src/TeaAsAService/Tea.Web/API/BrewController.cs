@@ -13,11 +13,11 @@ namespace Tea.Web.API
     [Authorize]
     [Route("api/[controller]")]
     [ApiController]
-    public class TeaController : ControllerBase
+    public class BrewController : ControllerBase
     {
         private IDataStore _dataStore; 
 
-        public TeaController(IDataStore dataStore)
+        public BrewController(IDataStore dataStore)
         {
             _dataStore = dataStore;
         }
@@ -51,16 +51,16 @@ namespace Tea.Web.API
         }
 
         [HttpGet]        
-        [Route("brews")]
-        public async Task<IActionResult> Brews([FromBody] UserHadBrew model)
+        [Route("brews/{id}")]
+        public async Task<IActionResult> Brews(string id)
         {
-            if (string.IsNullOrEmpty(model.UserId))
+            if (string.IsNullOrEmpty(id))
                 return NotFound("Please pass a user id");
 
-            var user = await _dataStore.GetUserAsync(model.UserId);
+            var user = await _dataStore.GetUserBySimpleIdAsync(id);
 
             if (user == null)
-                return NotFound($"Nothing found for user id {model.UserId}");
+                return NotFound($"Nothing found for user id {id}");
 
             return Ok(user);
         }

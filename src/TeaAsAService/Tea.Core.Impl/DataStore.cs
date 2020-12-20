@@ -2,7 +2,7 @@
 using System;
 using System.Threading.Tasks;
 using Tea.Core.Data;
-using Tea.Core.Entity;
+using Tea.Core.Domain;
 using Tea.Core.Impl.Data;
 
 namespace Tea.Core.Impl
@@ -57,7 +57,7 @@ namespace Tea.Core.Impl
            
         }
 
-        public async Task<User> GetUserAsync(string Id)
+        public async Task<User> GetUserBySimpleIdAsync(string Id)
         {
             return await _context.Users
                 .Include(user => user.History)

@@ -1,5 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Tea.Core.Entity;
+using Tea.Core.Domain;
 
 namespace Tea.Core.Impl.Data
 {
@@ -30,10 +30,6 @@ namespace Tea.Core.Impl.Data
             {
                 entity.HasKey(e => e.Id);
             });
-
-            
         }
-
-        
     }
 }

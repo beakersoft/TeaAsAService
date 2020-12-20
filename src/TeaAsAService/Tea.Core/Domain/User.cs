@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
-namespace Tea.Core.Entity
+namespace Tea.Core.Domain
 {
     public class User
     {

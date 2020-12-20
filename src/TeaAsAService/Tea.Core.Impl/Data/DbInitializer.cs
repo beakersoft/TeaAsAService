@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Linq;
-using Tea.Core.Entity;
+using Tea.Core.Domain;
 
 namespace Tea.Core.Impl.Data
 {
