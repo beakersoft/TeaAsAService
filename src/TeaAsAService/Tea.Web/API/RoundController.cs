@@ -1,11 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Tea.Core.Data;
+using Tea.Web.Models;
 
 namespace Tea.Web.API
 {
@@ -22,7 +20,24 @@ namespace Tea.Web.API
             _dataStore = dataStore;
         }
 
+        [HttpPost]
+        [Route("SetupNewRound")]
+        public async Task<IActionResult> SetupNewRound([FromBody] RoundModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                var message = string.Join(" | ", ModelState.Values
+                    .SelectMany(v => v.Errors)
+                    .Select(e => e.ErrorMessage));
+                return BadRequest(message);
+            }
 
+            if (model.UsersInRound.Count() < 2)
+                return BadRequest("You need at least 2 people in a round");
 
+            var round = await _dataStore.CreateRound(model.CreateRoundFromModel());
+
+            return Ok(round);
+        }
     }
 }

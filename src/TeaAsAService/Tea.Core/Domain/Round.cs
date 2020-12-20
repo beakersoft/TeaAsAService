@@ -4,13 +4,9 @@ using System.Text;
 
 namespace Tea.Core.Domain
 {
-    public class Round
+    public class Round : BaseDomain
     {
-        public Guid Id { get; set; }
-        public IEnumerable<User> Users { get; private set; }
-        public DateTime LastRoundTime { get; private set; }
-        public User LastBrewMaker { get; private set; }
-
-        //location
+        public ICollection<User> Users { get; set; }
+        public string RoundDescription { get; set; }
     }
 }

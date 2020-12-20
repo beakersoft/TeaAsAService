@@ -9,5 +9,8 @@ namespace Tea.Core.Data
         Task<User> UpdateBrewCount(string Id);
         Task<User> CreateNewUserAsync(string LocalizationString, string password);
         Task<User> Authenticate(string username, string password);
+
+        //create a genertic create method
+        Task<Round> CreateRound(Round round);
     }
 }

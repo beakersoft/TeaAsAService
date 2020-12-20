@@ -15,7 +15,7 @@ namespace Tea.Test.Web
             _httpClient  = new TestServerBase().Client;
         }
 
-        [Fact(Skip ="Ignore for now untill i can work out how to get it working with a MySQl database up")]        
+        [LocalOnlyFact]
         public async Task Test_LimitHit_TeaContoller()
         {
             var numberOfTimes = new List<int> { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };            
@@ -31,7 +31,7 @@ namespace Tea.Test.Web
             var results = await Task.WhenAll(allTasks);
             var retryHeaders = results.SelectMany(x => x.Headers).Where(x => x.Key == "Retry-After").ToList();
 
-            Assert.Equal(9, retryHeaders.Count);    //9 should have been re-tryed only one valid
+            Assert.Equal(9, retryHeaders.Count);    //9 should have been re-tried only one valid
         }
     }
 }

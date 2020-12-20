@@ -16,6 +16,13 @@ namespace Tea.Core.Impl
             _context = context;
         }
 
+        public async Task<Round> CreateRound(Round round)
+        {
+            _context.Rounds.Add(round);
+            await _context.SaveChangesAsync();
+            return round;
+        }
+
         public async Task<User> CreateNewUserAsync(string LocalizationString, string password)
         {            
             var user = User.CreateNewUser(LocalizationString, password);
@@ -63,5 +70,7 @@ namespace Tea.Core.Impl
                 .Include(user => user.History)
                 .FirstOrDefaultAsync(x => x.SimpleId == Id);
         }
+        
+        
     }
 }

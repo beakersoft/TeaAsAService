@@ -1,5 +1,5 @@
 ﻿using System;
-using Tea.Core.Entity;
+using Tea.Core.Domain;
 using Xunit;
 
 namespace Tea.Test.Core.Entity

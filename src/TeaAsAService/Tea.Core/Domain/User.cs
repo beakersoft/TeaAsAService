@@ -4,10 +4,8 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Tea.Core.Domain
 {
-    public class User
+    public class User : BaseDomain
     {
-        [Key]
-        public Guid Id { get; set; }
         [Required]
         public string SimpleId { get; private set; }
         [Required]
@@ -26,7 +24,7 @@ namespace Tea.Core.Domain
             {
                 Id = Guid.NewGuid(),
                 CountForDate = CurrentDayCount,
-                HistoryDate = LastTimeUtc.Date,
+                CreatedUtc = LastTimeUtc.Date,
                 User = this
             };
 
