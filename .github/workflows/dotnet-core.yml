@@ -25,4 +25,6 @@ jobs:
     - name: Build
       run: dotnet build --configuration Release --no-restore
     - name: Test
+      env:
+        GITHUB_BUILD: true
       run: dotnet test --no-restore --verbosity normal
