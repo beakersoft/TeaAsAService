@@ -40,14 +40,14 @@ namespace Tea.Core.Impl
             if (user == null)
                 return null;
 
-            if (user.CurrentDayCount > 0 && (DateTime.UtcNow.Subtract(user.LastTimeUtc).TotalDays >= 1))
+            if (user.CurrentDayCount > 0 && (DateTime.UtcNow.Subtract(user.LastBrewTimeUtc).TotalDays >= 1))
             {
                 var histEntry = user.CreateHistoryEntry();
                 _context.Add(histEntry);
             }
 
             user.CurrentDayCount++;
-            user.LastTimeUtc = DateTime.UtcNow;
+            user.LastBrewTimeUtc = DateTime.UtcNow;
             await _context.SaveChangesAsync();
 
             return user;
@@ -70,7 +70,12 @@ namespace Tea.Core.Impl
                 .Include(user => user.History)
                 .FirstOrDefaultAsync(x => x.SimpleId == Id);
         }
-        
-        
+
+        public async Task<User> UpdateUser(User user)
+        {
+            _context.Users.Update(user);
+            await _context.SaveChangesAsync();
+            return user;
+        }
     }
 }

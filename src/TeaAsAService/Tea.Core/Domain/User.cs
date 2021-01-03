@@ -7,16 +7,17 @@ namespace Tea.Core.Domain
     public class User : BaseDomain
     {
         [Required]
-        public string SimpleId { get; private set; }
+        public string SimpleId { get; set; }
         [Required]
         public string Password { get; private set; }
         [EmailAddress]
         public string EmailAddress { get; set; }
         public string Localization { get; set; }
         [Required]
-        public DateTime LastTimeUtc { get; set; }
+        public DateTime LastBrewTimeUtc { get; set; }
         public int CurrentDayCount { get; set; }
         public ICollection<History> History { get; set;}
+        public string LastUpdated { get; set; }
 
         public History CreateHistoryEntry()
         {
@@ -24,13 +25,19 @@ namespace Tea.Core.Domain
             {
                 Id = Guid.NewGuid(),
                 CountForDate = CurrentDayCount,
-                CreatedUtc = LastTimeUtc.Date,
+                CreatedUtc = LastBrewTimeUtc.Date,
                 User = this
             };
 
             CurrentDayCount = 0;
 
             return entry;
+        }
+
+        public void SetPassword(string newPassword)
+        {
+            //put some strenth checking into here
+            Password = newPassword;
         }
 
         public static User CreateNewUser(string localizationString, string password)
@@ -45,7 +52,8 @@ namespace Tea.Core.Domain
                 Localization = localizationString,
                 SimpleId = simpleId,
                 CurrentDayCount = 1,
-                LastTimeUtc = DateTime.UtcNow
+                LastBrewTimeUtc = DateTime.UtcNow,
+                LastUpdated = $"{DateTime.UtcNow} by Test.User"
             };
         }
 
@@ -61,7 +69,7 @@ namespace Tea.Core.Domain
                 Localization = "en-GB",
                 SimpleId = simpleId,
                 CurrentDayCount = 1,
-                LastTimeUtc = DateTime.UtcNow
+                LastBrewTimeUtc = DateTime.UtcNow
             };
         }
     }

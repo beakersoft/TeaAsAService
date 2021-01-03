@@ -13,7 +13,7 @@ namespace Tea.Web.API
     [ApiController]
     public class RoundController : ControllerBase
     {
-        private IDataStore _dataStore;
+        private readonly IDataStore _dataStore;
 
         public RoundController(IDataStore dataStore)
         {

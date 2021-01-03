@@ -24,7 +24,7 @@ namespace Tea.Web.API
 
         [HttpPost]
         [AllowAnonymous]
-        [Route("NewPersonHadBrew")]
+        [Route("newpersonhadbrew")]
         public async Task<IActionResult> NewPersonHadBrew()
         {
             var localizationString = HttpContext.Request.GetTypedHeaders()
@@ -46,21 +46,6 @@ namespace Tea.Web.API
 
             if (user == null)            
                 return NotFound($"Nothing found for user id {model.UserId}");
-
-            return Ok();
-        }
-
-        [HttpGet]        
-        [Route("brews/{id}")]
-        public async Task<IActionResult> Brews(string id)
-        {
-            if (string.IsNullOrEmpty(id))
-                return NotFound("Please pass a user id");
-
-            var user = await _dataStore.GetUserBySimpleIdAsync(id);
-
-            if (user == null)
-                return NotFound($"Nothing found for user id {id}");
 
             return Ok(user);
         }

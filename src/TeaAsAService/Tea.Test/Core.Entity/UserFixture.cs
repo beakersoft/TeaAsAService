@@ -25,7 +25,7 @@ namespace Tea.Test.Core.Entity
             var dummyUser = new User
             {
                 Id = Guid.NewGuid(),
-                LastTimeUtc = DateTime.UtcNow.AddHours(-1),
+                LastBrewTimeUtc = DateTime.UtcNow.AddHours(-1),
                 CurrentDayCount = noOfBrews
             };
 

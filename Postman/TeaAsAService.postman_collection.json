@@ -1,0 +1,180 @@
+{
+	"info": {
+		"_postman_id": "1b91d339-987f-4fb9-b592-2fb718a569f7",
+		"name": "TeaAsAService",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "New User Create (HadBrew)",
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "username",
+							"value": "7EmMT6n3f0i/YniN6osJXQ==",
+							"type": "string"
+						},
+						{
+							"key": "password",
+							"value": "TestPassword123*",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "https://localhost:5001/api/Brew/NewPersonHadBrew",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "5001",
+					"path": [
+						"api",
+						"Brew",
+						"NewPersonHadBrew"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update Brew Count (HadBrew)",
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "username",
+							"value": "7EmMT6n3f0i/YniN6osJXQ==",
+							"type": "string"
+						},
+						{
+							"key": "password",
+							"value": "TestPassword123*",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"UserId\" : \"gcTJxgr8tEy5w7fA4esFcQ==\"\r\n}"
+				},
+				"url": {
+					"raw": "https://localhost:5001/api/Brew/HadBrew",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "5001",
+					"path": [
+						"api",
+						"Brew",
+						"HadBrew"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GetUser",
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "username",
+							"value": "7EmMT6n3f0i/YniN6osJXQ==",
+							"type": "string"
+						},
+						{
+							"key": "password",
+							"value": "TestPassword123*",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://localhost:5001/api/user?id=7EmMT6n3f0i/YniN6osJXQ==",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "5001",
+					"path": [
+						"api",
+						"user"
+					],
+					"query": [
+						{
+							"key": "id",
+							"value": "7EmMT6n3f0i/YniN6osJXQ=="
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update User",
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "password",
+							"value": "TestPassword123*",
+							"type": "string"
+						},
+						{
+							"key": "username",
+							"value": "7EmMT6n3f0i/YniN6osJXQ==",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"simpleId\": \"gcTJxgr8tEy5w7fA4esFcQ==\",\r\n    \"password\": \"lkYfgKdVA$@@7jNx\",\r\n    \"emailAddress\": \"beakersoft@gmail.com\",\r\n\t\"localization\": null,\r\n\t\"updatedBy\": \"beakersoft@gmail.com\"\r\n}"
+				},
+				"url": {
+					"raw": "https://localhost:5001/api/user/updateuser",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "5001",
+					"path": [
+						"api",
+						"user",
+						"updateuser"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

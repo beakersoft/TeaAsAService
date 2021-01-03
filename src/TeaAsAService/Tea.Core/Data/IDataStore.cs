@@ -10,7 +10,11 @@ namespace Tea.Core.Data
         Task<User> CreateNewUserAsync(string LocalizationString, string password);
         Task<User> Authenticate(string username, string password);
 
-        //create a genertic create method
+        //create a generic create method or split the stores up?
+        //create a generic update method
+
+        Task<User> UpdateUser(User user);
+
         Task<Round> CreateRound(Round round);
     }
 }

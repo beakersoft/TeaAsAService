@@ -6,23 +6,23 @@ using Xunit;
 
 namespace Tea.Test.Web
 {
-    public class RateLimitIntegrationFixture
+    [CollectionDefinition("IntegrationApiCollection")]
+    public class RateLimitIntegrationFixture : IntegrationBase
     {
         private readonly HttpClient _httpClient;
 
         public RateLimitIntegrationFixture()
         {
-            _httpClient  = new TestServerBase().Client;
+            _httpClient = TestServerBase.Client;
         }
 
-        [LocalOnlyFact]
-        //[Fact(Skip ="Skip until can work out how to ignore on CI")]
+        [Fact]
         public async Task Test_LimitHit_TeaContoller()
         {
             var numberOfTimes = new List<int> { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };            
             var allTasks = numberOfTimes.Select(n => Task.Run(async () =>
             {
-                var response = await _httpClient.PostAsync($"api/tea/hadbrew", null);
+                var response = await _httpClient.PostAsync($"api/brew/hadbrew", null);
                 return new
                 {                    
                     Headers = response.Headers.ToList()
