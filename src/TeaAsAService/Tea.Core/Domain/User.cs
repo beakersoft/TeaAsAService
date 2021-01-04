@@ -8,8 +8,9 @@ namespace Tea.Core.Domain
     {
         [Required]
         public string SimpleId { get; set; }
-        [Required]
-        public string Password { get; private set; }
+        [Required(AllowEmptyStrings = false, ErrorMessage = "Password must include at least 8 characters, capital and lowercase letters, at least one number, and a special character.")]
+        [DisplayFormat(ConvertEmptyStringToNull = false)]
+        public string Password { get; set; }
         [EmailAddress]
         public string EmailAddress { get; set; }
         public string Localization { get; set; }
@@ -36,8 +37,15 @@ namespace Tea.Core.Domain
 
         public void SetPassword(string newPassword)
         {
-            //put some strenth checking into here
-            Password = newPassword;
+            if (ValidatePassword(newPassword))
+            {
+                Password = newPassword;
+            }
+            else
+            {
+                Password = null;
+            }
+
         }
 
         public static User CreateNewUser(string localizationString, string password)
@@ -71,6 +79,43 @@ namespace Tea.Core.Domain
                 CurrentDayCount = 1,
                 LastBrewTimeUtc = DateTime.UtcNow
             };
+        }
+
+        static bool ValidatePassword(string password)
+        {
+            const int MIN_LENGTH = 8;
+
+            if (password == null) throw new ArgumentNullException();
+
+            bool meetsLengthRequirements = password.Length >= MIN_LENGTH;
+            bool hasUpperCaseLetter = false;
+            bool hasLowerCaseLetter = false;
+            bool hasDecimalDigit = false;
+            bool hasSpecialCharacter = false;
+
+            if (meetsLengthRequirements)
+            {
+                foreach (char c in password)
+                {
+                    if (char.IsUpper(c))
+                        hasUpperCaseLetter = true;
+                    else if (char.IsLower(c))
+                        hasLowerCaseLetter = true;
+                    else if (char.IsDigit(c))
+                        hasDecimalDigit = true;
+                    else if (!char.IsLetterOrDigit(c))
+                        hasSpecialCharacter = true;
+                }
+            }
+
+            bool isValid = meetsLengthRequirements
+                        && hasUpperCaseLetter
+                        && hasLowerCaseLetter
+                        && hasDecimalDigit
+                        && hasSpecialCharacter;
+
+            return isValid;
+
         }
     }
 }
