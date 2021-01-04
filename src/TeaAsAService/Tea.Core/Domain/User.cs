@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
+
 namespace Tea.Core.Domain
 {
     public class User : BaseDomain
@@ -35,15 +36,18 @@ namespace Tea.Core.Domain
             return entry;
         }
 
-        public void SetPassword(string newPassword)
+        public bool SetPassword(string newPassword)
         {
-            if (ValidatePassword(newPassword))
+            
+            if(newPassword.ValidatePassword())
             {
                 Password = newPassword;
+                return true;
             }
             else
             {
                 Password = null;
+                return false;
             }
 
         }
@@ -81,41 +85,6 @@ namespace Tea.Core.Domain
             };
         }
 
-        static bool ValidatePassword(string password)
-        {
-            const int MIN_LENGTH = 8;
-
-            if (password == null) throw new ArgumentNullException();
-
-            bool meetsLengthRequirements = password.Length >= MIN_LENGTH;
-            bool hasUpperCaseLetter = false;
-            bool hasLowerCaseLetter = false;
-            bool hasDecimalDigit = false;
-            bool hasSpecialCharacter = false;
-
-            if (meetsLengthRequirements)
-            {
-                foreach (char c in password)
-                {
-                    if (char.IsUpper(c))
-                        hasUpperCaseLetter = true;
-                    else if (char.IsLower(c))
-                        hasLowerCaseLetter = true;
-                    else if (char.IsDigit(c))
-                        hasDecimalDigit = true;
-                    else if (!char.IsLetterOrDigit(c))
-                        hasSpecialCharacter = true;
-                }
-            }
-
-            bool isValid = meetsLengthRequirements
-                        && hasUpperCaseLetter
-                        && hasLowerCaseLetter
-                        && hasDecimalDigit
-                        && hasSpecialCharacter;
-
-            return isValid;
-
-        }
+        
     }
 }
