@@ -44,11 +44,9 @@ namespace Tea.Core.Domain
                 Password = newPassword;
                 return true;
             }
-            else
-            {
-                Password = null;
+
                 return false;
-            }
+            
 
         }
 
