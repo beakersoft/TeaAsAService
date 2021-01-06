@@ -45,9 +45,8 @@ namespace Tea.Core.Domain
                 return true;
             }
 
-                return false;
+            return false;
             
-
         }
 
         public static User CreateNewUser(string localizationString, string password)
