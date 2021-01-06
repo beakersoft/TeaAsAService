@@ -2,14 +2,16 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
+
 namespace Tea.Core.Domain
 {
     public class User : BaseDomain
     {
         [Required]
         public string SimpleId { get; set; }
-        [Required]
-        public string Password { get; private set; }
+        [Required(AllowEmptyStrings = false, ErrorMessage = "Password must include at least 8 characters, capital and lowercase letters, at least one number, and a special character.")]
+        [DisplayFormat(ConvertEmptyStringToNull = false)]
+        public string Password { get; set; }
         [EmailAddress]
         public string EmailAddress { get; set; }
         public string Localization { get; set; }
@@ -34,10 +36,17 @@ namespace Tea.Core.Domain
             return entry;
         }
 
-        public void SetPassword(string newPassword)
+        public bool SetPassword(string newPassword)
         {
-            //put some strenth checking into here
-            Password = newPassword;
+            
+            if(newPassword.ValidatePassword())
+            {
+                Password = newPassword;
+                return true;
+            }
+
+            return false;
+            
         }
 
         public static User CreateNewUser(string localizationString, string password)
@@ -72,5 +81,7 @@ namespace Tea.Core.Domain
                 LastBrewTimeUtc = DateTime.UtcNow
             };
         }
+
+        
     }
 }
