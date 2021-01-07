@@ -1,31 +1,21 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using Xunit;
+﻿using Xunit;
 using Tea.Core;
-using System.Xml.Linq;
 
 namespace Tea.Test
 {
     public class PasswordTests
     {
-        [Fact]
-        public void PasswordValidates()
+        [Theory]
+        [InlineData("Pass1!", false)]
+        [InlineData("password1!", false)]
+        [InlineData("PASSWORD1!", false)]
+        [InlineData("Password!", false)]
+        [InlineData("Password1", false)]
+        [InlineData("Password1!", true)]
+        [InlineData("IamAC0mpl£xStr1ng", true)]
+        public void PasswordValidates(string passwordToCheck, bool shouldValidate)
         {
-            var passwordTooShort = "Pass1!";
-            var passwordNoUppercase = "password1!";
-            var passwordNoLowercase = "PASSWORD1!";
-            var passwordNoDigits = "Password!";
-            var passwordNoSpecialCharacter = "Password1";
-            var passwordValid = "Password1!";
-
-            Assert.False(passwordTooShort.ValidatePassword());
-            Assert.False(passwordNoUppercase.ValidatePassword());
-            Assert.False(passwordNoLowercase.ValidatePassword());
-            Assert.False(passwordNoDigits.ValidatePassword());
-            Assert.False(passwordNoSpecialCharacter.ValidatePassword());
-            Assert.True(passwordValid.ValidatePassword());
-
+            Assert.Equal(shouldValidate, passwordToCheck.ValidatePassword());
         }
     }
 }

@@ -1,7 +1,7 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-
 
 namespace Tea.Core.Domain
 {
@@ -11,6 +11,7 @@ namespace Tea.Core.Domain
         public string SimpleId { get; set; }
         [Required(AllowEmptyStrings = false, ErrorMessage = "Password must include at least 8 characters, capital and lowercase letters, at least one number, and a special character.")]
         [DisplayFormat(ConvertEmptyStringToNull = false)]
+        [JsonIgnore]
         public string Password { get; set; }
         [EmailAddress]
         public string EmailAddress { get; set; }
@@ -38,7 +39,6 @@ namespace Tea.Core.Domain
 
         public bool SetPassword(string newPassword)
         {
-            
             if(newPassword.ValidatePassword())
             {
                 Password = newPassword;
@@ -46,7 +46,6 @@ namespace Tea.Core.Domain
             }
 
             return false;
-            
         }
 
         public static User CreateNewUser(string localizationString, string password)
@@ -62,7 +61,7 @@ namespace Tea.Core.Domain
                 SimpleId = simpleId,
                 CurrentDayCount = 1,
                 LastBrewTimeUtc = DateTime.UtcNow,
-                LastUpdated = $"{DateTime.UtcNow} by Test.User"
+                CreatedUtc = DateTime.UtcNow
             };
         }
 
