@@ -40,7 +40,7 @@ namespace Tea.Web.Helpers
                 var credentials = Encoding.UTF8.GetString(credentialBytes).Split(new[] { ':' }, 2);
                 var username = credentials[0];
                 var password = credentials[1];
-                user = await _dataStore.Authenticate(username, password);
+                user = await _dataStore.AuthenticateAsync(username, password);
             }
             catch
             {

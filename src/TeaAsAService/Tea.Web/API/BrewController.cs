@@ -15,7 +15,7 @@ namespace Tea.Web.API
     [ApiController]
     public class BrewController : ControllerBase
     {
-        private IDataStore _dataStore; 
+        private readonly IDataStore _dataStore; 
 
         public BrewController(IDataStore dataStore)
         {
@@ -31,7 +31,9 @@ namespace Tea.Web.API
                 .AcceptLanguage.OrderByDescending(x=>x.Quality ?? 0.1).FirstOrDefault()?.Value.ToString()
                 ?? "en-GB";
             
-            var user = await _dataStore.CreateNewUserAsync(localizationString, RandomPasswordGenerator.GeneratePassword(16));
+            var user = Core.Domain.User.CreateNewUser(localizationString, RandomPasswordGenerator.GeneratePassword(16));
+            user = await _dataStore.CreateAsync(user);
+
             return Ok(user);
         }
 
@@ -42,10 +44,16 @@ namespace Tea.Web.API
             if(string.IsNullOrEmpty(model.UserId))           
                 return NotFound("Please pass a user id");
             
-            var user = await _dataStore.UpdateBrewCount(model.UserId);
+            var user = await _dataStore.GetUserBySimpleIdAsync(model.UserId);
 
             if (user == null)            
                 return NotFound($"Nothing found for user id {model.UserId}");
+
+            var historyEntry = user.UpdateBrewCount();
+            if (historyEntry != null)
+                await _dataStore.CreateAsync(historyEntry);
+            
+            user = await _dataStore.UpdateAsync(user);
 
             return Ok(user);
         }

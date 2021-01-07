@@ -47,6 +47,20 @@ namespace Tea.Core.Domain
 
             return false;
         }
+            
+        //THIS NEEDS A UNIT TEST
+        public History UpdateBrewCount()
+        {
+            History entry = null;
+
+            if (CurrentDayCount > 0 && (DateTime.UtcNow.Subtract(LastBrewTimeUtc).TotalDays >= 1))
+                entry = CreateHistoryEntry();
+
+            CurrentDayCount++;
+            LastBrewTimeUtc = DateTime.UtcNow;
+
+            return entry;
+        }
 
         public static User CreateNewUser(string localizationString, string password)
         {

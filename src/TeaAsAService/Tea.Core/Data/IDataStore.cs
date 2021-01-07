@@ -6,15 +6,8 @@ namespace Tea.Core.Data
     public interface IDataStore
     {
         Task<User> GetUserBySimpleIdAsync(string Id);     
-        Task<User> UpdateBrewCount(string Id);
-        Task<User> CreateNewUserAsync(string LocalizationString, string password);
-        Task<User> Authenticate(string username, string password);
-
-        //create a generic create method or split the stores up?
-        //create a generic update method
-
-        Task<User> UpdateUser(User user);
-
-        Task<Round> CreateRound(Round round);
+        Task<User> AuthenticateAsync(string username, string password);
+        Task<T> CreateAsync<T>(T entity) where T : class, IBaseDomain;
+        Task<T> UpdateAsync<T>(T entity) where T : class, IBaseDomain;
     }
 }

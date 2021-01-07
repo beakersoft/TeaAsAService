@@ -35,7 +35,7 @@ namespace Tea.Web.API
             if (model.UsersInRound.Count() < 2)
                 return BadRequest("You need at least 2 people in a round");
 
-            var round = await _dataStore.CreateRound(model.CreateRoundFromModel());
+            var round = await _dataStore.CreateAsync(model.CreateRoundFromModel());
 
             return Ok(round);
         }
