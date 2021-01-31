@@ -47,7 +47,8 @@ namespace Tea.Web.API
                 return BadRequest("Password is not valid. Please enter valid password.");
             }
             
-            var user = await _dataStore.CreateNewUserAsync(model.LocalizedString, model.Password);
+            var user = Core.Domain.User.CreateNewUser(model.LocalizedString, model.Password);
+            user = await _dataStore.CreateAsync(user);
             return Ok(user);
         }
 
