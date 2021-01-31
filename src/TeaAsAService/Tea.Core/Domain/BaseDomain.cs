@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Tea.Core.Domain
 {
-    public abstract class BaseDomain
+    public abstract class BaseDomain : IBaseDomain
     {
         public BaseDomain()
         {

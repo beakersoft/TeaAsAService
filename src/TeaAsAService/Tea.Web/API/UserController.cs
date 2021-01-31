@@ -15,7 +15,7 @@ namespace Tea.Web.API
     [Authorize]
     public class UserController : ControllerBase
     {
-        private IDataStore _dataStore;
+        private readonly IDataStore _dataStore;
 
         public UserController(IDataStore dataStore)
         {
@@ -69,7 +69,7 @@ namespace Tea.Web.API
                 return NotFound($"Nothing found for user id {model.SimpleId}");
 
             model.UpdateUserFromModel(user);
-            await _dataStore.UpdateUser(user);
+            await _dataStore.UpdateAsync(user);
 
             return Ok(user);
         }

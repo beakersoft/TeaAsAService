@@ -9,51 +9,14 @@ namespace Tea.Core.Impl
 {
     public class DataStore : IDataStore
     {
-        private TeaContext _context;
+        private readonly TeaContext _context;
 
         public DataStore(TeaContext context)
         {
             _context = context;
         }
 
-        public async Task<Round> CreateRound(Round round)
-        {
-            _context.Rounds.Add(round);
-            await _context.SaveChangesAsync();
-            return round;
-        }
-
-        public async Task<User> CreateNewUserAsync(string LocalizationString, string password)
-        {            
-            var user = User.CreateNewUser(LocalizationString, password);
-            
-            _context.Users.Add(user);
-            await _context.SaveChangesAsync();
-
-            return user;
-        }
-
-        public async Task<User> UpdateBrewCount(string Id)
-        {
-            var user = await _context.Users.FirstOrDefaultAsync(x=>x.SimpleId == Id);
-
-            if (user == null)
-                return null;
-
-            if (user.CurrentDayCount > 0 && (DateTime.UtcNow.Subtract(user.LastBrewTimeUtc).TotalDays >= 1))
-            {
-                var histEntry = user.CreateHistoryEntry();
-                _context.Add(histEntry);
-            }
-
-            user.CurrentDayCount++;
-            user.LastBrewTimeUtc = DateTime.UtcNow;
-            await _context.SaveChangesAsync();
-
-            return user;
-        }
-
-        public async Task<User> Authenticate(string username, string password)
+        public async Task<User> AuthenticateAsync(string username, string password)
         {
             var user = await _context.Users.SingleOrDefaultAsync(x => x.SimpleId == username && x.Password == password);
 
@@ -61,7 +24,6 @@ namespace Tea.Core.Impl
                 return null;
             
             return user;
-           
         }
 
         public async Task<User> GetUserBySimpleIdAsync(string Id)
@@ -71,11 +33,18 @@ namespace Tea.Core.Impl
                 .FirstOrDefaultAsync(x => x.SimpleId == Id);
         }
 
-        public async Task<User> UpdateUser(User user)
+        public async Task<T> CreateAsync<T>(T entity) where T : class, IBaseDomain
         {
-            _context.Users.Update(user);
+            _context.Set<T>().Add(entity);
             await _context.SaveChangesAsync();
-            return user;
+            return entity;
+        }
+
+        public async Task<T> UpdateAsync<T>(T entity) where T : class, IBaseDomain
+        {
+            _context.Set<T>().Update(entity);
+            await _context.SaveChangesAsync();
+            return entity;
         }
     }
 }
