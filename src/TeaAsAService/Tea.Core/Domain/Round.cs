@@ -1,12 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
 
 namespace Tea.Core.Domain
 {
     public class Round : BaseDomain
     {
-        public ICollection<User> Users { get; set; }
+        public ICollection<RoundUser> UsersInRound { get; set; }
         public string RoundDescription { get; set; }
     }
 }
