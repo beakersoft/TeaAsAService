@@ -22,6 +22,7 @@ namespace Tea.Core.Impl.Data
             modelBuilder.Entity<User>().ToTable("User");
             modelBuilder.Entity<Round>().ToTable("Round");
             modelBuilder.Entity<History>().ToTable("History");
+            modelBuilder.Entity<RoundUser>().ToTable("RoundUser");
 
             modelBuilder.Entity<User>(entity =>
             {
@@ -33,9 +34,15 @@ namespace Tea.Core.Impl.Data
             modelBuilder.Entity<Round>(entity =>
             {
                 entity.HasKey(e => e.Id);
+                entity.HasMany(d => d.UsersInRound);
             });
 
             modelBuilder.Entity<History>(entity =>
+            {
+                entity.HasKey(e => e.Id);
+            });
+
+            modelBuilder.Entity<RoundUser>(entity =>
             {
                 entity.HasKey(e => e.Id);
             });

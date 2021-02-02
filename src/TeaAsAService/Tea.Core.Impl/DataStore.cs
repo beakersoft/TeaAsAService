@@ -1,5 +1,6 @@
-﻿ using Microsoft.EntityFrameworkCore;
-using System;
+﻿using System;
+using System.Linq;
+using Microsoft.EntityFrameworkCore;
 using System.Threading.Tasks;
 using Tea.Core.Data;
 using Tea.Core.Domain;
@@ -20,22 +21,24 @@ namespace Tea.Core.Impl
         {
             var user = await _context.Users.SingleOrDefaultAsync(x => x.SimpleId == username && x.Password == password);
 
-            if (user == null)
-                return null;
-            
             return user;
         }
 
-        public async Task<User> GetUserBySimpleIdAsync(string Id)
+        public async Task<T> GetAsync<T>(Guid id) where T : class, IBaseDomain
+        {
+            return await _context.Set<T>().FindAsync(id);
+        }
+
+        public async Task<User> GetUserBySimpleIdAsync(string id)
         {
             return await _context.Users
                 .Include(user => user.History)
-                .FirstOrDefaultAsync(x => x.SimpleId == Id);
+                .FirstOrDefaultAsync(x => x.SimpleId == id);
         }
 
         public async Task<T> CreateAsync<T>(T entity) where T : class, IBaseDomain
         {
-            _context.Set<T>().Add(entity);
+            await _context.Set<T>().AddAsync(entity);
             await _context.SaveChangesAsync();
             return entity;
         }

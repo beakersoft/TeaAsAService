@@ -36,7 +36,7 @@ namespace Tea.Test.Web
             user = Newtonsoft.Json.JsonConvert.DeserializeObject<User>(updatebrewCountResponse);
 
             Assert.NotNull(user?.SimpleId);
-            Assert.Equal(2, user?.CurrentDayCount);
+            Assert.Equal(2, user.CurrentDayCount);
         }
     }
 }

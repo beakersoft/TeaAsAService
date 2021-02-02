@@ -15,12 +15,28 @@ namespace Tea.Core.Domain
         public string Password { get; set; }
         [EmailAddress]
         public string EmailAddress { get; set; }
+
+        public string Firstname { get;set; }
+        public string Surname { get;set; }
+
         public string Localization { get; set; }
         [Required]
         public DateTime LastBrewTimeUtc { get; set; }
         public int CurrentDayCount { get; set; }
         public ICollection<History> History { get; set;}
         public string LastUpdated { get; set; }
+
+        public string UserName
+        {
+            get
+            {
+                if (!string.IsNullOrEmpty(Firstname) && !string.IsNullOrEmpty(Surname))
+                    return $"{Firstname} {Surname}";
+
+                return !string.IsNullOrEmpty(EmailAddress) ? EmailAddress : SimpleId;
+            }
+        }
+
 
         public History CreateHistoryEntry()
         {
@@ -39,13 +55,12 @@ namespace Tea.Core.Domain
 
         public bool SetPassword(string newPassword)
         {
-            if(newPassword.ValidatePassword())
-            {
-                Password = newPassword;
-                return true;
-            }
+            if (!newPassword.ValidatePassword()) 
+                return false;
 
-            return false;
+            Password = newPassword;
+            return true;
+
         }
             
         //THIS NEEDS A UNIT TEST

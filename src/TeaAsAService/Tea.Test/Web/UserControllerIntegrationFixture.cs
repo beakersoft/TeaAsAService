@@ -86,5 +86,30 @@ namespace Tea.Test.Web
 
             Assert.NotNull(response);
         }
+
+        [Fact]
+        public async Task CreateUser_CreatesUserWithValidModel()
+        {
+            var model = new CreateUserModel()
+            {
+                Password = "Password1!",
+                EmailAddress = "testusers@domain.com",
+                Firstname = "John",
+                Surname = "Smith"
+            };
+
+            var response = await PostAndAssert($"api/user/createuser", model, _httpClient, true);
+
+            JsonAssert.EqualOverrideDefault(@"
+                {
+                    ""password"": ""7EmMT6n3f0i/YniN6osJXQ=="",
+                    ""emailAddress"": ""testusers@domain.com"",
+                    ""firstName"": ""John"",
+                    ""surname"": ""Smith""
+                }"
+                , response
+                , new JsonDiffConfig(true)
+            );
+        }
     }
 }

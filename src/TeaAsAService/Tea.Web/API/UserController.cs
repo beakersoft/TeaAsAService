@@ -48,6 +48,7 @@ namespace Tea.Web.API
             }
             
             var user = Core.Domain.User.CreateNewUser(model.LocalizedString, model.Password);
+            model.CreateUserFromModel(user);
             user = await _dataStore.CreateAsync(user);
             return Ok(user);
         }
