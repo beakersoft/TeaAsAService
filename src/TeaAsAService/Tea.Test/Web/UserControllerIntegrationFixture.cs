@@ -102,9 +102,8 @@ namespace Tea.Test.Web
 
             JsonAssert.EqualOverrideDefault(@"
                 {
-                    ""password"": ""7EmMT6n3f0i/YniN6osJXQ=="",
                     ""emailAddress"": ""testusers@domain.com"",
-                    ""firstName"": ""John"",
+                    ""firstname"": ""John"",
                     ""surname"": ""Smith""
                 }"
                 , response
