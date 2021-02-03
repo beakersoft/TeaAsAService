@@ -12,12 +12,12 @@ namespace Tea.Core.Domain
         [Required(AllowEmptyStrings = false, ErrorMessage = "Password must include at least 8 characters, capital and lowercase letters, at least one number, and a special character.")]
         [DisplayFormat(ConvertEmptyStringToNull = false)]
         [JsonIgnore]
-        public string Password { get; set; }
+        public string Password { get; private set; } 
         [EmailAddress]
         public string EmailAddress { get; set; }
 
-        public string Firstname { get;set; }
-        public string Surname { get;set; }
+        public string Firstname { get; set; }
+        public string Surname { get; set; }
 
         public string Localization { get; set; }
         [Required]
@@ -86,6 +86,25 @@ namespace Tea.Core.Domain
             {
                 Id = userId,
                 Password = password,
+                Localization = localizationString,
+                SimpleId = simpleId,
+                CurrentDayCount = 1,
+                LastBrewTimeUtc = DateTime.UtcNow,
+                CreatedUtc = DateTime.UtcNow
+            };
+        }
+
+        public static User CreateNewUser(string localizationString, string firstName, string surname, string email)
+        {
+            var userId = Guid.NewGuid();
+            var simpleId = Convert.ToBase64String(userId.ToByteArray());
+
+            return new User
+            {
+                Id = userId,
+                Firstname = firstName,
+                Surname = surname,
+                EmailAddress = email,
                 Localization = localizationString,
                 SimpleId = simpleId,
                 CurrentDayCount = 1,

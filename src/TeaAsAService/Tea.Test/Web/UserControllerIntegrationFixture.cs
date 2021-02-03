@@ -110,5 +110,20 @@ namespace Tea.Test.Web
                 , new JsonDiffConfig(true)
             );
         }
+
+        [Fact]
+        public async Task CreateUser_InvalidPasswordThrowsError()
+        {
+            var model = new CreateUserModel()
+            {
+                Password = null,
+                EmailAddress = "testusers@domain.com",
+                Firstname = "John",
+                Surname = "Smith"
+            };
+
+            await PostAndAssert($"api/user/createuser", model, _httpClient, false);
+
+        }
     }
 }

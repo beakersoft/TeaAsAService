@@ -34,22 +34,17 @@ namespace Tea.Web.API
                 return BadRequest(message);
             }
 
-
             if(string.IsNullOrEmpty(model.LocalizedString))
             {
                  model.LocalizedString = HttpContext.Request.GetTypedHeaders()
                 .AcceptLanguage.OrderByDescending(x=>x.Quality ?? 0.1).FirstOrDefault()?.Value.ToString()
                 ?? "en-GB";
             }         
-
-            if(!model.Password.ValidatePassword())
-            {
-                return BadRequest("Password is not valid. Please enter valid password.");
-            }
             
-            var user = Core.Domain.User.CreateNewUser(model.LocalizedString, model.Password);
-            model.CreateUserFromModel(user);
+            var user = Core.Domain.User.CreateNewUser(model.LocalizedString, model.Firstname, model.Surname, model.EmailAddress);
+            if (!user.SetPassword(model.Password)) return BadRequest("Password is not valid.");
             user = await _dataStore.CreateAsync(user);
+
             return Ok(user);
         }
 
