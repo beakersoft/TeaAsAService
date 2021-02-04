@@ -41,8 +41,9 @@ namespace Tea.Web.API
                 ?? "en-GB";
             }         
             
-            var user = Core.Domain.User.CreateNewUser(model.LocalizedString, model.Firstname, model.Surname, model.EmailAddress);
+            var user = Core.Domain.User.CreateNewUser(model.LocalizedString, model.Firstname, model.Surname);
             if (!user.SetPassword(model.Password)) return BadRequest("Password is not valid.");
+            if (!user.SetEmail(model.EmailAddress)) return BadRequest("Email Address is not valid.");
             user = await _dataStore.CreateAsync(user);
 
             return Ok(user);

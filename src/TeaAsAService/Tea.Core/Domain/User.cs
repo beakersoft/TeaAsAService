@@ -62,6 +62,15 @@ namespace Tea.Core.Domain
             return true;
 
         }
+
+        public bool SetEmail(string email)
+        {
+            if (!email.ValidateEmail()) return false;
+
+            EmailAddress = email;
+
+            return true;
+        }
             
         //THIS NEEDS A UNIT TEST
         public History UpdateBrewCount()
@@ -94,7 +103,7 @@ namespace Tea.Core.Domain
             };
         }
 
-        public static User CreateNewUser(string localizationString, string firstName, string surname, string email)
+        public static User CreateNewUser(string localizationString, string firstName, string surname)
         {
             var userId = Guid.NewGuid();
             var simpleId = Convert.ToBase64String(userId.ToByteArray());
@@ -104,7 +113,6 @@ namespace Tea.Core.Domain
                 Id = userId,
                 Firstname = firstName,
                 Surname = surname,
-                EmailAddress = email,
                 Localization = localizationString,
                 SimpleId = simpleId,
                 CurrentDayCount = 1,

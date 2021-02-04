@@ -125,5 +125,20 @@ namespace Tea.Test.Web
             await PostAndAssert($"api/user/createuser", model, _httpClient, false);
 
         }
+
+        [Fact]
+        public async Task CreateUser_InvalidEmailThrowsError()
+        {
+            var model = new CreateUserModel()
+            {
+                Password = null,
+                EmailAddress = "testusersdomain.com",
+                Firstname = "John",
+                Surname = "Smith"
+            };
+
+            await PostAndAssert($"api/user/createuser", model, _httpClient, false);
+
+        }
     }
 }
