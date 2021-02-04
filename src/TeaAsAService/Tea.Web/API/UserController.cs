@@ -1,8 +1,10 @@
 ﻿using System.Linq;
+using Microsoft.AspNetCore.Http;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Tea.Core.Data;
+using Tea.Core;
 using Tea.Web.Models;
 
 namespace Tea.Web.API
@@ -18,6 +20,33 @@ namespace Tea.Web.API
         public UserController(IDataStore dataStore)
         {
             _dataStore = dataStore;
+        }
+
+        [HttpPost]
+        [Route("createuser")]
+        public async Task<IActionResult> CreateUser([FromBody] CreateUserModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                var message = string.Join(" | ", ModelState.Values
+                    .SelectMany(v => v.Errors)
+                    .Select(e => e.ErrorMessage));
+                return BadRequest(message);
+            }
+
+            if(string.IsNullOrEmpty(model.LocalizedString))
+            {
+                 model.LocalizedString = HttpContext.Request.GetTypedHeaders()
+                .AcceptLanguage.OrderByDescending(x=>x.Quality ?? 0.1).FirstOrDefault()?.Value.ToString()
+                ?? "en-GB";
+            }         
+            
+            var user = Core.Domain.User.CreateNewUser(model.LocalizedString, model.Firstname, model.Surname);
+            if (!user.SetPassword(model.Password)) return BadRequest("Password is not valid.");
+            if (!user.SetEmail(model.EmailAddress)) return BadRequest("Email Address is not valid.");
+            user = await _dataStore.CreateAsync(user);
+
+            return Ok(user);
         }
 
         [HttpPost]

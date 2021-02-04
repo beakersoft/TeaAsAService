@@ -3,7 +3,7 @@ using Tea.Core;
 
 namespace Tea.Test
 {
-    public class PasswordTests
+    public class PasswordAndEmailValidationTests
     {
         [Theory]
         [InlineData("Pass1!", false)]
@@ -16,6 +16,17 @@ namespace Tea.Test
         public void PasswordValidates(string passwordToCheck, bool shouldValidate)
         {
             Assert.Equal(shouldValidate, passwordToCheck.ValidatePassword());
+        }
+
+        [Theory]
+        [InlineData("johndoe", false)]
+        [InlineData("johndoe.com", false)]
+        [InlineData("johndoe@", false)]
+        [InlineData("johndoe@url", true)]
+        [InlineData("johndoe@url.com", true)]
+        public void EmailValidates(string emailToCheck, bool shouldValidate)
+        {
+            Assert.Equal(shouldValidate, emailToCheck.ValidateEmail());
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using System.ComponentModel.DataAnnotations;
 
 namespace Tea.Core
 {
@@ -16,6 +17,11 @@ namespace Tea.Core
             if (!password.Any(c => !char.IsLetterOrDigit(c))) return false;
 
             return true;
+        }
+
+        public static bool ValidateEmail(this string email)
+        {
+            return new EmailAddressAttribute().IsValid(email);
         }
     }
 }
