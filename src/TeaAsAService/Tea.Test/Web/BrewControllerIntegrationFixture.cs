@@ -26,7 +26,7 @@ namespace Tea.Test.Web
 
             Assert.NotNull(user?.SimpleId);
 
-            var hadBrewModel = new UserHadBrew
+            var hadBrewModel = new UserHadBrewModel
             {
                 UserId = user.SimpleId
             };

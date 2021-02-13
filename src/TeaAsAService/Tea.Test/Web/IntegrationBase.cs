@@ -34,7 +34,7 @@ namespace Tea.Test.Web
             TestServerBase = new TestServerBase();
         }
 
-        public async static Task<string> PostAndAssert(string url, HttpClient client, bool assertTrue)
+        public static async Task<string> PostAndAssert(string url, HttpClient client, bool assertTrue)
         {
             var response = await client.PostAsync(url, null);
             var stringResponse = await response.Content.ReadAsStringAsync();
@@ -47,7 +47,7 @@ namespace Tea.Test.Web
             return stringResponse;
         }
 
-        public async static Task<string> PostAndAssert<T>(string url, T model, HttpClient client, bool assertTrue)
+        public static async Task<string> PostAndAssert<T>(string url, T model, HttpClient client, bool assertTrue)
         {
             var response = await client.PostAsJsonAsync(url, model);
             var stringResponse = await response.Content.ReadAsStringAsync();
@@ -60,7 +60,7 @@ namespace Tea.Test.Web
             return stringResponse;
         }
 
-        public async static Task<string> GetAndAssert(string url, HttpClient client, bool assertTrue)
+        public static async Task<string> GetAndAssert(string url, HttpClient client, bool assertTrue)
         {
             var response = await client.GetAsync(url);
             var stringResponse = await response.Content.ReadAsStringAsync();

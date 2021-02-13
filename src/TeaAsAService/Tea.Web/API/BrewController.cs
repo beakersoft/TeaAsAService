@@ -13,7 +13,7 @@ namespace Tea.Web.API
     [Authorize]
     [Route("api/[controller]")]
     [ApiController]
-    public class BrewController : ControllerBase
+    public class BrewController : BaseController
     {
         private readonly IDataStore _dataStore; 
 
@@ -39,7 +39,7 @@ namespace Tea.Web.API
 
         [HttpPost]        
         [Route("hadbrew")]
-        public async Task<IActionResult> HadBrew([FromBody] UserHadBrew model)
+        public async Task<IActionResult> HadBrew([FromBody] UserHadBrewModel model)
         {
             if(string.IsNullOrEmpty(model.UserId))           
                 return NotFound("Please pass a user id");

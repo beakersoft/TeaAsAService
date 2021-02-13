@@ -7,10 +7,6 @@ namespace Tea.Core.Impl.Data
     {
         public DbSet<User> Users { get; set; }
 
-        public DbSet<Round> Rounds { get; set; }
-
-        public DbSet<History> History { get; set; }
-
         public TeaContext(DbContextOptions<TeaContext> options) : base(options)
         {
         }        
@@ -23,6 +19,7 @@ namespace Tea.Core.Impl.Data
             modelBuilder.Entity<Round>().ToTable("Round");
             modelBuilder.Entity<History>().ToTable("History");
             modelBuilder.Entity<RoundUser>().ToTable("RoundUser");
+            modelBuilder.Entity<RoundDetail>().ToTable("RoundDetail");
 
             modelBuilder.Entity<User>(entity =>
             {
@@ -34,7 +31,10 @@ namespace Tea.Core.Impl.Data
             modelBuilder.Entity<Round>(entity =>
             {
                 entity.HasKey(e => e.Id);
-                entity.HasMany(d => d.UsersInRound);
+                entity.HasMany(d => d.UsersInRound)
+                    .WithOne();
+                entity.HasMany(r => r.Rounds)
+                    .WithOne();
             });
 
             modelBuilder.Entity<History>(entity =>
@@ -45,7 +45,17 @@ namespace Tea.Core.Impl.Data
             modelBuilder.Entity<RoundUser>(entity =>
             {
                 entity.HasKey(e => e.Id);
+                entity.HasOne(u => u.Round)
+                    .WithMany(x => x.UsersInRound);
             });
+
+            modelBuilder.Entity<RoundDetail>(entity =>
+            {
+                entity.HasKey(k => k.Id);
+                entity.HasOne(r => r.Round)
+                    .WithMany(x => x.Rounds);
+            });
+
         }
     }
 }

@@ -24,7 +24,7 @@ namespace Tea.Web.Models
                 user.Localization = Localization;
 
             if (!string.IsNullOrEmpty(EmailAddress))
-                user.EmailAddress = EmailAddress;
+                user.SetEmail(EmailAddress);
 
             user.LastUpdated = $"{DateTime.UtcNow} by {UpdatedBy}";
 

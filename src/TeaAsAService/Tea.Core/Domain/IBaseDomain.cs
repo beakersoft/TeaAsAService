@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 
 namespace Tea.Core.Domain
 {
@@ -7,6 +6,6 @@ namespace Tea.Core.Domain
     {
         DateTime CreatedUtc { get; set; }
         Guid Id { get; set; }
-        IList<UpdateEvent> UpdateEvents { get; set; }
+        string UpdateEvents { get;set; }
     }
 }

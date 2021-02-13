@@ -12,6 +12,8 @@ using Tea.Core.Impl;
 using Microsoft.AspNetCore.Authentication;
 using Tea.Web.Helpers;
 using AspNetCoreRateLimit;
+using Tea.Core;
+using Tea.Core.Impl.Services;
 
 namespace Tea.Web
 {
@@ -29,18 +31,21 @@ namespace Tea.Web
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_3_0);
             
             services.AddDbContext<TeaContext>(options =>
-                    options.UseMySQL(Configuration.GetConnectionString("DefaultConnection")));
+                    options
+                        .UseLazyLoadingProxies()
+                        .UseMySQL(Configuration.GetConnectionString("DefaultConnection")));
             
             services.AddAuthentication("BasicAuthentication")
                 .AddScheme<AuthenticationSchemeOptions, BasicAuthenticationHandler>("BasicAuthentication", null);
 
             services
                 .AddOptions()
-                .AddScoped<IDataStore, DataStore>()                
+                .AddSingleton<IDataStore, DataStore>()                
+                .AddSingleton<IRoundService, RoundService>()
                 .AddApiVersioningConfig()
                 .AddRateLimiting(Configuration)
                 .AddSwagger()
-                .AddHttpContextAccessor();
+                .AddHttpContextAccessor();           
 
             services.AddControllersWithViews()
                 .AddNewtonsoftJson(options =>
@@ -64,7 +69,6 @@ namespace Tea.Web
             app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseRouting();
-
             app.UseAuthentication();
             app.UseAuthorization();
 
@@ -79,7 +83,6 @@ namespace Tea.Web
             {
                 c.SwaggerEndpoint("./v1/swagger.json", "TeaAsAService");
             });
-
         }
     }
 }

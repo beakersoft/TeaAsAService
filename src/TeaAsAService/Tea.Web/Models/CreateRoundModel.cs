@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace Tea.Web.Models
 {
-    public class CreateRound
+    public class CreateRoundModel
     {
     }
 }

@@ -2,7 +2,7 @@
 
 namespace Tea.Web.Models
 {
-    public class UserHadBrew
+    public class UserHadBrewModel
     {
         [Required]
         public string UserId { get; set; }

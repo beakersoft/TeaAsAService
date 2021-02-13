@@ -10,11 +10,12 @@ namespace Tea.Web.Models
 {
     public class RoundModel
     {
-        private bool _isRoundValid;
+        private readonly ICollection<RoundUser> _domainUsersForRound;
+        public bool IsRoundValid;
         private const int MinimumUsersPerRound = 2;
         public readonly IList<string> ValidationMessages;
-        private readonly ICollection<RoundUser> _domainUsersForRound;
-
+        public string AllValidationMessages => string.Join(" | ", ValidationMessages); 
+        
         public RoundModel()
         {
             UsersInRound = new List<string>();
@@ -31,16 +32,10 @@ namespace Tea.Web.Models
 
         [Required]
         public string RoundLocationName { get; set; }
-
+       
         public async Task<bool> ValidateRound(IDataStore dataStore)
         {
-            var isValid = true;
-
-            if (UsersInRound.Count() < MinimumUsersPerRound)
-            {
-                ValidationMessages.Add($"You need at least {MinimumUsersPerRound} people in a round");
-                isValid = false;
-            }
+            var isValid = CheckUsersInRound(UsersInRound.Count);
 
             foreach (var user in UsersInRound)
             {
@@ -62,25 +57,61 @@ namespace Tea.Web.Models
                 }
             }
 
-            _isRoundValid = isValid;
+            IsRoundValid = isValid;
             return isValid;
         }
 
-        public Round CreateRoundFromModel()
+        public async Task<Round> CreateRoundFromModel(IDataStore dataStore)
         {
-            if (!_isRoundValid || !_domainUsersForRound.Any())
-            {
-                ValidationMessages.Add("Please validate the round before creating the domain object");
+            if (!await (ValidateRound(dataStore)))
                 return null;
-            }
 
-            return new Round
+            var round = new Round
             {
                 Id = Guid.NewGuid(),
                 CreatedUtc = DateTime.UtcNow,
                 RoundDescription = RoundDescription,
-                UsersInRound = _domainUsersForRound
+                RoundLocationName = RoundLocationName
             };
+
+            _domainUsersForRound.ToList().ForEach(x=> round.AddUserToRound(x));
+
+            return round;
+        }
+
+        public async Task<Round> UpdateRound(Round round,IDataStore dataStore)
+        {
+            if (!await (ValidateRound(dataStore)))
+                return null;
+           
+            var usersToRemove
+                = round.UsersInRound.Where(p => UsersInRound.All(p2 => p2 != p.User.SimpleId)).ToList();
+            usersToRemove.ForEach(round.RemoveUserFromRound);
+
+            var usersToAdd
+                = UsersInRound.Where(u => round.UsersInRound.All(r => r.User.SimpleId != u)).ToList();
+            usersToAdd.ForEach(x=> round.AddUserToRound(_domainUsersForRound.First(y=>y.User.SimpleId == x)));
+
+            if (!CheckUsersInRound(round.UsersInRound.Count))
+                return null;
+
+            round.RoundDescription = RoundDescription;
+            round.RoundLocationName = RoundLocationName;
+            round.UpdateEvents += $"|{DateTime.UtcNow} round updated";
+
+            return round;
+        }
+
+        private bool CheckUsersInRound(int roundCount)
+        {
+            if (roundCount < MinimumUsersPerRound)
+            {
+                ValidationMessages.Add($"You need at least {MinimumUsersPerRound} people in a round");
+                IsRoundValid = false;
+                return false;
+            }
+
+            return true;
         }
     }
 }

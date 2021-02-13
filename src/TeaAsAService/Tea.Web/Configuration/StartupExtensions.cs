@@ -40,5 +40,12 @@ namespace Tea.Web.Configuration
             return services;
         }
 
+        public static IServiceCollection AddApplicationHealthChecks(this IServiceCollection services)
+        {
+            services
+                .AddHealthChecks();
+
+            return services;
+        }
     }
 }

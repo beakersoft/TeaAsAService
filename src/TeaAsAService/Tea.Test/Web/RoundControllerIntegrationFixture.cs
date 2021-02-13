@@ -27,16 +27,108 @@ namespace Tea.Test.Web
             var createUserResponse = await PostAndAssert($"{RootBrewApiPath }/newpersonhadbrew", _httpClient, true);
             var user = Newtonsoft.Json.JsonConvert.DeserializeObject<User>(createUserResponse);
 
-            var response = await PostAndAssert($"{RootRoundApiPath }/new", DummyRoundModel(user.SimpleId), _httpClient,true);
+            var response = await PostAndAssert($"{RootRoundApiPath}/new", DummyRoundModel(user.SimpleId), _httpClient,true);
 
             JsonAssert.EqualOverrideDefault(@"
-{""roundDescription"":""Integration Test Round"",
-""allTimeTotalRounds"":0,""roundsToday"":0}"
+{
+    ""roundDescription"": ""Integration Test Round"",
+    ""roundLocationName"": ""Bespin Feasting Table""
+}"
                 , response
                 , new JsonDiffConfig(true)
             );
         }
 
+        [Fact]
+        public async Task EditRound_ReturnsRoundSummary()
+        {
+            var createUserResponse = await PostAndAssert($"{RootBrewApiPath}/newpersonhadbrew", _httpClient, true);
+            var user = Newtonsoft.Json.JsonConvert.DeserializeObject<User>(createUserResponse);
+
+            var response = await PostAndAssert($"{RootRoundApiPath}/new", DummyRoundModel(user.SimpleId), _httpClient,
+                true);
+
+            var createdRound = Newtonsoft.Json.JsonConvert.DeserializeObject<RoundSummaryModel>(response);
+            
+            var roundToEdit = DummyRoundModel(user.SimpleId);
+            roundToEdit.Id = createdRound.Id;
+            roundToEdit.RoundDescription = "I am an edit";
+
+            var editRoundResponse = await PostAndAssert($"{RootRoundApiPath}/edit", roundToEdit, _httpClient,
+                true);
+
+            JsonAssert.EqualOverrideDefault(@"
+{
+    ""roundDescription"": ""I am an edit"",
+    ""roundLocationName"": ""Bespin Feasting Table""
+}"
+                , editRoundResponse
+                , new JsonDiffConfig(true)
+            );
+        }
+
+        [Fact]
+        public async Task HadRound_WithValidModelReturns()
+        {
+            var createUserResponse = await PostAndAssert($"{RootBrewApiPath}/newpersonhadbrew", _httpClient, true);
+            var user = Newtonsoft.Json.JsonConvert.DeserializeObject<User>(createUserResponse);
+
+            var response = await PostAndAssert($"{RootRoundApiPath}/new", DummyRoundModel(user.SimpleId), _httpClient,
+                true);
+
+            var createdRound = Newtonsoft.Json.JsonConvert.DeserializeObject<RoundSummaryModel>(response);
+
+            var model = new HadRoundModel
+            {
+                Id = createdRound.Id,
+                UserGettingRound = "7EmMT6n3f0i/YniN6osJXQ==",
+                RoundNotes = "Fixture Round"
+            };
+
+            var hasRoundResponse = await PostAndAssert($"{RootRoundApiPath}/hadround", model, _httpClient,
+                true);
+
+            JsonAssert.EqualOverrideDefault(@"{
+    ""roundDescription"": ""Integration Test Round"",
+    ""roundLocationName"": ""Bespin Feasting Table"",
+    ""lastRoundBy"": ""testusers@domain.com""
+}"
+                , hasRoundResponse
+                , new JsonDiffConfig(true)
+            );
+        }
+
+        [Fact]
+        public async Task CreateNewRound_ReturnsErrorAndValidationSummaryOnBadModelData()
+        {
+            var response = await PostAndAssert($"{RootRoundApiPath}/new",new RoundModel() , _httpClient,false);
+
+            JsonAssert.EqualOverrideDefault(@"{
+    ""errors"": {
+        ""RoundDescription"": [
+            ""The RoundDescription field is required.""
+        ],
+        ""RoundLocationName"": [
+            ""The RoundLocationName field is required.""
+        ]
+    },
+    ""title"": ""One or more validation errors occurred."",
+    ""status"": 400
+}
+"
+                , response
+                , new JsonDiffConfig(true)
+            );
+        }
+
+        [Fact]
+        public async Task CreateNewRound_ReturnsErrorAndValidationSummaryOnRoundValidationFail()
+        {
+            var response = await PostAndAssert($"{RootRoundApiPath}/new",DummyRoundModel("NotAUser") , _httpClient,false);
+
+            Assert.Equal("User with id NotAUser was not found", response);
+
+        }
 
         private RoundModel DummyRoundModel(string userId)
         {

@@ -1,9 +1,14 @@
+<<<<<<< HEAD
 ﻿using System.Linq;
 using Microsoft.AspNetCore.Http;
 using System.Threading.Tasks;
+=======
+﻿using System.Threading.Tasks;
+>>>>>>> WIP rounds
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Tea.Core.Data;
+using Tea.Core;
 using Tea.Web.Models;
 
 namespace Tea.Web.API
@@ -26,8 +31,13 @@ namespace Tea.Web.API
         public async Task<IActionResult> CreateUser([FromBody] CreateUserModel model)
         {
             if (!ModelState.IsValid)
-                return BadRequest(GetModelStateMessages());
-            
+            {
+                var message = string.Join(" | ", ModelState.Values
+                    .SelectMany(v => v.Errors)
+                    .Select(e => e.ErrorMessage));
+                return BadRequest(message);
+            }
+
             if(string.IsNullOrEmpty(model.LocalizedString))
             {
                  model.LocalizedString = HttpContext.Request.GetTypedHeaders()

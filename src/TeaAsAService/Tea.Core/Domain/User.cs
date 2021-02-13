@@ -8,23 +8,21 @@ namespace Tea.Core.Domain
     public class User : BaseDomain
     {
         [Required]
-        public string SimpleId { get; set; }
+        public virtual string SimpleId { get; set; }
         [Required(AllowEmptyStrings = false, ErrorMessage = "Password must include at least 8 characters, capital and lowercase letters, at least one number, and a special character.")]
         [DisplayFormat(ConvertEmptyStringToNull = false)]
         [JsonIgnore]
-        public string Password { get; private set; } 
+        public virtual string Password { get; private set; } 
         [EmailAddress]
-        public string EmailAddress { get; set; }
-
-        public string Firstname { get; set; }
-        public string Surname { get; set; }
-
-        public string Localization { get; set; }
+        public virtual string EmailAddress { get; set; }
+        public virtual string Firstname { get;set; }
+        public virtual string Surname { get;set; }
+        public virtual string Localization { get; set; }
         [Required]
-        public DateTime LastBrewTimeUtc { get; set; }
-        public int CurrentDayCount { get; set; }
-        public ICollection<History> History { get; set;}
-        public string LastUpdated { get; set; }
+        public virtual DateTime LastBrewTimeUtc { get; set; }
+        public virtual int CurrentDayCount { get; set; }
+        public virtual ICollection<History> History { get; private set; }
+        public virtual string LastUpdated { get; set; }
 
         public string UserName
         {
@@ -36,7 +34,6 @@ namespace Tea.Core.Domain
                 return !string.IsNullOrEmpty(EmailAddress) ? EmailAddress : SimpleId;
             }
         }
-
 
         public History CreateHistoryEntry()
         {
@@ -60,19 +57,18 @@ namespace Tea.Core.Domain
 
             Password = newPassword;
             return true;
-
         }
 
         public bool SetEmail(string email)
         {
-            if (!email.ValidateEmail()) return false;
+            if (!email.ValidateEmail()) 
+                return false;
 
             EmailAddress = email;
 
             return true;
         }
             
-        //THIS NEEDS A UNIT TEST
         public History UpdateBrewCount()
         {
             History entry = null;
@@ -136,7 +132,5 @@ namespace Tea.Core.Domain
                 LastBrewTimeUtc = DateTime.UtcNow
             };
         }
-
-        
     }
 }
