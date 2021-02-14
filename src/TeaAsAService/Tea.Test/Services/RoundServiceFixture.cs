@@ -19,7 +19,7 @@ namespace Tea.Test.Services
             _dataStore = new Mock<IDataStore>();
             _dataStore.Setup(x => x.GetUserBySimpleIdAsync(It.IsAny<string>())).ReturnsAsync(new User());
 
-            _service = new RoundService(_dataStore.Object);
+            _service = new RoundService();
         }
 
         [Fact]
@@ -27,7 +27,7 @@ namespace Tea.Test.Services
         {
             var round = DummyRound();
             
-            var res = await _service.UpdateExistingRoundAsync(round, TestAuthSimpleUserId, "Test Round");
+            var res = await _service.UpdateExistingRoundAsync(round, _dataStore.Object,TestAuthSimpleUserId, "Test Round");
 
             Assert.True(res);
             _dataStore.Verify(x => x.CreateAsync(It.IsAny<RoundDetail>()), Times.Once);

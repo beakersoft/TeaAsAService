@@ -40,11 +40,12 @@ namespace Tea.Web
 
             services
                 .AddOptions()
-                .AddSingleton<IDataStore, DataStore>()                
+                .AddScoped<IDataStore, DataStore>()                
                 .AddSingleton<IRoundService, RoundService>()
                 .AddApiVersioningConfig()
                 .AddRateLimiting(Configuration)
                 .AddSwagger()
+                .AddApplicationHealthChecks()
                 .AddHttpContextAccessor();           
 
             services.AddControllersWithViews()
@@ -76,6 +77,7 @@ namespace Tea.Web
             {
                 endpoints.MapRazorPages();
                 endpoints.MapControllers();
+                endpoints.MapHealthChecks("/hc");
             });
 
             app.UseSwagger();

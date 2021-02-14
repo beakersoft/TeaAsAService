@@ -77,7 +77,7 @@ namespace Tea.Web.API
             if (round == null)
                 return NotFound($"No round found for round id {model.Id}");
             
-            await _roundService.UpdateExistingRoundAsync(round,model.UserGettingRound,model.RoundNotes);
+            await _roundService.UpdateExistingRoundAsync(round, _dataStore,model.UserGettingRound,model.RoundNotes);
 
             return Accepted(RoundSummaryModel.FromRound(round));
         }

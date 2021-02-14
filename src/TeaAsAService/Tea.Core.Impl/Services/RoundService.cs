@@ -8,16 +8,10 @@ namespace Tea.Core.Impl.Services
 {
     public class RoundService : IRoundService
     {
-        private readonly IDataStore _dataStore;
-
-        public RoundService(IDataStore dataStore)
+        public async Task<bool> UpdateExistingRoundAsync(Round round, IDataStore dataStore,
+            string userGettingRound, string roundNotes)
         {
-            _dataStore = dataStore;
-        }
-
-        public async Task<bool> UpdateExistingRoundAsync(Round round, string userGettingRound, string roundNotes)
-        {
-            var roundDoneBy = await _dataStore.GetUserBySimpleIdAsync(userGettingRound);
+            var roundDoneBy = await dataStore.GetUserBySimpleIdAsync(userGettingRound);
 
             if (roundDoneBy == null)
                 return false;
@@ -35,21 +29,21 @@ namespace Tea.Core.Impl.Services
                 }
             };
 
-            await _dataStore.CreateAsync(roundDetail);
+            await dataStore.CreateAsync(roundDetail);
 
-            var updatedUsers = await UpdateUsersFromNewRound(round);
-            updatedUsers.ForEach(x => _dataStore.UpdateAsync(x));
+            var updatedUsers = await UpdateUsersFromNewRound(round,dataStore);
+            updatedUsers.ForEach(x => dataStore.UpdateAsync(x));
 
             return true;
         }
 
-        private async Task<List<User>> UpdateUsersFromNewRound(Round round)
+        private async Task<List<User>> UpdateUsersFromNewRound(Round round, IDataStore dataStore)
         {
             var updatedUsers = new List<User>();
 
             foreach (var roundUser  in round.UsersInRound)
             {
-                var user = await _dataStore.GetAsync<User>(roundUser.User.Id);
+                var user = await dataStore.GetAsync<User>(roundUser.User.Id);
                 user.UpdateBrewCount();
                 updatedUsers.Add(user);
             }
