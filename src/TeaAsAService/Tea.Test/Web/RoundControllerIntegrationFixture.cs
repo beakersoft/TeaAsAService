@@ -90,8 +90,7 @@ namespace Tea.Test.Web
 
             JsonAssert.EqualOverrideDefault(@"{
     ""roundDescription"": ""Integration Test Round"",
-    ""roundLocationName"": ""Bespin Feasting Table"",
-    ""lastRoundBy"": ""testusers@domain.com""
+    ""roundLocationName"": ""Bespin Feasting Table""
 }"
                 , hasRoundResponse
                 , new JsonDiffConfig(true)
