@@ -45,7 +45,7 @@ namespace Tea.Web
                 .AddApiVersioningConfig()
                 .AddRateLimiting(Configuration)
                 .AddSwagger()
-                .AddApplicationHealthChecks()
+                .AddApplicationHealthChecks(Configuration)
                 .AddHttpContextAccessor();           
 
             services.AddControllersWithViews()

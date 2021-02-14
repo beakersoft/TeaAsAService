@@ -2,7 +2,9 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.OpenApi.Models;
+using Tea.Core.Impl.HealthChecks;
 
 namespace Tea.Web.Configuration
 {
@@ -40,10 +42,16 @@ namespace Tea.Web.Configuration
             return services;
         }
 
-        public static IServiceCollection AddApplicationHealthChecks(this IServiceCollection services)
+        public static IServiceCollection AddApplicationHealthChecks(this IServiceCollection services, IConfiguration Configuration)
         {
             services
-                .AddHealthChecks();
+                .AddHealthChecks()
+        // Add a health check for a SQL Server database
+        .AddCheck(
+            "TeasAsAServiceDB-check",
+            new DatabaseHealthCheck(Configuration.GetConnectionString("DefaultConnection")),
+            HealthStatus.Unhealthy,
+            new string[] { "teaAsAServiceDb" });
 
             return services;
         }
