@@ -1,5 +1,7 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Tea.Core;
 using Tea.Core.Data;
@@ -28,37 +30,37 @@ namespace Tea.Web.API
         public async Task<IActionResult> New([FromBody] RoundModel model)
         {
             if (!ModelState.IsValid)
-                return BadRequest(GetModelStateMessages());
-
+                return ReturnError(StatusCodes.Status400BadRequest, "Invalid round creation request", GetModelStateMessages());
+  
             var round = await model.CreateRoundFromModel(_dataStore);
 
             if (!model.IsRoundValid)
-                return BadRequest(model.AllValidationMessages);   
-
+                return ReturnError(StatusCodes.Status400BadRequest, "Invalid round creation request", model.AllValidationMessages);
+            
             await _dataStore.CreateAsync(round);
 
             return Accepted(RoundSummaryModel.FromRound(round));
         }
 
-        [HttpPost]
+        [HttpPut]
         [Route("edit")]
         public async Task<IActionResult> Edit([FromBody] RoundModel model)
         {
             if (!ModelState.IsValid)
-                return BadRequest(GetModelStateMessages());
-            
+                return ReturnError(StatusCodes.Status400BadRequest, "Invalid round edit request", GetModelStateMessages());
+
             if (!model.Id.HasValue)
-                return BadRequest("Please send a valid round id to edit a round");
+                return ReturnError(StatusCodes.Status400BadRequest, "Invalid round edit request", "Please send a valid round id to edit a round");
 
             var round = await _dataStore.GetAsync<Round>(model.Id.Value);
 
             if (round == null)
-                return NotFound($"No round found for round id {model.Id}");
+                return ReturnError(StatusCodes.Status404NotFound, "Invalid round edit request", $"Round {model.Id} not found");
 
             round = await model.UpdateRound(round, _dataStore);
             
             if (!model.IsRoundValid || round == null)
-                return BadRequest(model.AllValidationMessages);
+                return ReturnError(StatusCodes.Status400BadRequest, "Invalid round edit request", model.AllValidationMessages);
 
             round = await _dataStore.UpdateAsync(round);
 
@@ -70,16 +72,24 @@ namespace Tea.Web.API
         public async Task<IActionResult> HadRound([FromBody] HadRoundModel model)
         {
             if (!ModelState.IsValid)
-                return BadRequest(GetModelStateMessages());
-
+                return ReturnError(StatusCodes.Status400BadRequest, "Invalid had round request", GetModelStateMessages());
+          
             var round = await _dataStore.GetAsync<Round>(model.Id);
 
             if (round == null)
-                return NotFound($"No round found for round id {model.Id}");
+                return ReturnError(StatusCodes.Status404NotFound, "Invalid had round request", $"Round {model.Id} not found");
             
             await _roundService.UpdateExistingRoundAsync(round, _dataStore,model.UserGettingRound,model.RoundNotes);
 
             return Accepted(RoundSummaryModel.FromRound(round));
+        }
+
+        [HttpGet]
+        [Route("get/{id}")]
+        public async Task<IActionResult> Get([FromRoute] Guid id)
+        {
+            var round = await _dataStore.GetAsync<Round>(id);
+            return Ok(RoundSummaryModel.FromRound(round));
         }
     }
 }

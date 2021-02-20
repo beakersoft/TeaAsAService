@@ -54,7 +54,7 @@ namespace Tea.Test.Web
             roundToEdit.Id = createdRound.Id;
             roundToEdit.RoundDescription = "I am an edit";
 
-            var editRoundResponse = await PostAndAssert($"{RootRoundApiPath}/edit", roundToEdit, _httpClient,
+            var editRoundResponse = await PutAndAssert($"{RootRoundApiPath}/edit", roundToEdit, _httpClient,
                 true);
 
             JsonAssert.EqualOverrideDefault(@"
@@ -113,8 +113,7 @@ namespace Tea.Test.Web
     },
     ""title"": ""One or more validation errors occurred."",
     ""status"": 400
-}
-"
+}"
                 , response
                 , new JsonDiffConfig(true)
             );
@@ -125,8 +124,15 @@ namespace Tea.Test.Web
         {
             var response = await PostAndAssert($"{RootRoundApiPath}/new",DummyRoundModel("NotAUser") , _httpClient,false);
 
-            Assert.Equal("User with id NotAUser was not found", response);
-
+            JsonAssert.EqualOverrideDefault(@"{
+    ""title"": ""Invalid round creation request"",
+    ""status"": 400,
+    ""detail"": ""User with id NotAUser was not found"",
+    ""instance"": ""/api/round/new""
+}"
+                , response
+                , new JsonDiffConfig(true)
+            );
         }
 
         private RoundModel DummyRoundModel(string userId)

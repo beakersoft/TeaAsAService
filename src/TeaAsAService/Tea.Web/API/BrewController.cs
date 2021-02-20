@@ -42,13 +42,13 @@ namespace Tea.Web.API
         public async Task<IActionResult> HadBrew([FromBody] UserHadBrewModel model)
         {
             if(string.IsNullOrEmpty(model.UserId))           
-                return NotFound("Please pass a user id");
-            
+                return ReturnError(StatusCodes.Status400BadRequest, "Invalid HadBrew Request", "Please pass a user id");
+
             var user = await _dataStore.GetUserBySimpleIdAsync(model.UserId);
 
-            if (user == null)            
-                return NotFound($"Nothing found for user id {model.UserId}");
-
+            if (user == null)
+                return ReturnError(StatusCodes.Status404NotFound, "Invalid HadBrew Request", $"User {model.UserId} not found");
+           
             var historyEntry = user.UpdateBrewCount();
             if (historyEntry != null)
                 await _dataStore.CreateAsync(historyEntry);

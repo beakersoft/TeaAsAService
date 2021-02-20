@@ -60,6 +60,20 @@ namespace Tea.Test.Web
             return stringResponse;
         }
 
+        public static async Task<string> PutAndAssert<T>(string url, T model, HttpClient client, bool assertTrue)
+        {
+            var response = await client.PutAsJsonAsync(url, model);
+            var stringResponse = await response.Content.ReadAsStringAsync();
+
+            if (assertTrue)
+                Assert.True(response.IsSuccessStatusCode);
+            else
+                Assert.False(response.IsSuccessStatusCode);
+
+            return stringResponse;
+
+        }
+
         public static async Task<string> GetAndAssert(string url, HttpClient client, bool assertTrue)
         {
             var response = await client.GetAsync(url);

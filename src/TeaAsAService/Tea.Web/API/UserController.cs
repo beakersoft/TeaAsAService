@@ -26,9 +26,9 @@ namespace Tea.Web.API
         public async Task<IActionResult> CreateUser([FromBody] CreateUserModel model)
         {
             if (!ModelState.IsValid)
-                return BadRequest(GetModelStateMessages());
-            
-            if(string.IsNullOrEmpty(model.LocalizedString))
+                return ReturnError(StatusCodes.Status400BadRequest, "Invalid Create User Request", GetModelStateMessages());
+
+            if (string.IsNullOrEmpty(model.LocalizedString))
             {
                  model.LocalizedString = HttpContext.Request.GetTypedHeaders()
                 .AcceptLanguage.OrderByDescending(x=>x.Quality ?? 0.1).FirstOrDefault()?.Value.ToString()
@@ -36,24 +36,29 @@ namespace Tea.Web.API
             }         
             
             var user = Core.Domain.User.CreateNewUser(model.LocalizedString, model.Firstname, model.Surname);
-            if (!user.SetPassword(model.Password)) return BadRequest("Password is not valid.");
-            if (!user.SetEmail(model.EmailAddress)) return BadRequest("Email Address is not valid.");
+
+            if (!user.SetPassword(model.Password))
+                return ReturnError(StatusCodes.Status400BadRequest, "Invalid Create User Request", "Password does not meet complexity requirements");
+
+            if (!user.SetEmail(model.EmailAddress))
+                return ReturnError(StatusCodes.Status400BadRequest, "Invalid Create User Request", "Email Address is not valid");
+
             user = await _dataStore.CreateAsync(user);
 
             return Ok(user);
         }
 
-        [HttpPost]
+        [HttpPut]
         [Route("updateuser")]
         public async Task<IActionResult> UpdateUser([FromBody] UserUpdateModel model)
         {
             if (!ModelState.IsValid)
-                return BadRequest(GetModelStateMessages());
+                return ReturnError(StatusCodes.Status400BadRequest, "Invalid Update User Request", GetModelStateMessages());
 
             var user = await _dataStore.GetUserBySimpleIdAsync(model.SimpleId);
 
             if (user == null)
-                return NotFound($"Nothing found for user id {model.SimpleId}");
+               return ReturnError(StatusCodes.Status404NotFound, "Invalid Update User Request", $"User {model.SimpleId} not found");
 
             model.UpdateUserFromModel(user);
             await _dataStore.UpdateAsync(user);
@@ -65,12 +70,12 @@ namespace Tea.Web.API
         public async Task<IActionResult> Get(string id)
         {
             if (string.IsNullOrEmpty(id))
-                return NotFound("Please pass a user id");
+                return ReturnError(StatusCodes.Status404NotFound, "Invalid User get Request", $"Please pass a user id");
 
             var user = await _dataStore.GetUserBySimpleIdAsync(id);
 
             if (user == null)
-                return NotFound($"Nothing found for user id {id}");
+                return ReturnError(StatusCodes.Status404NotFound, "Invalid Update User Request", $"User {id} not found");
 
             return Ok(user);
         }

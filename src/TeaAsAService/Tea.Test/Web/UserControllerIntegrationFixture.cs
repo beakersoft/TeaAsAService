@@ -47,7 +47,7 @@ namespace Tea.Test.Web
                 UpdatedBy = "TestUser1"
             };
 
-            var response = await PostAndAssert($"api/user/updateuser", model, _httpClient,true);
+            var response = await PutAndAssert($"api/user/updateuser", model, _httpClient,true);
 
             JsonAssert.EqualOverrideDefault(@"
 {
