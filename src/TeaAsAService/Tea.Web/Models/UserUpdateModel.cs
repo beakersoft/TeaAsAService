@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
+using Tea.Core;
 using Tea.Core.Domain;
 
 namespace Tea.Web.Models
@@ -15,10 +16,10 @@ namespace Tea.Web.Models
         [Required]
         public string UpdatedBy { get; set; }
 
-        public User UpdateUserFromModel(User user)
+        public User UpdateUserFromModel(User user, IPasswordHasher passwordHasher)
         {
             if (!string.IsNullOrEmpty(Password))
-                user.SetPassword(Password);
+                user.SetPassword(Password, passwordHasher);
 
             if (!string.IsNullOrEmpty(Localization))
                 user.Localization = Localization;

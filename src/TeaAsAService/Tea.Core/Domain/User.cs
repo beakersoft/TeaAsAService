@@ -9,10 +9,16 @@ namespace Tea.Core.Domain
     {
         [Required]
         public virtual string SimpleId { get; set; }
+
         [Required(AllowEmptyStrings = false, ErrorMessage = "Password must include at least 8 characters, capital and lowercase letters, at least one number, and a special character.")]
         [DisplayFormat(ConvertEmptyStringToNull = false)]
         [JsonIgnore]
-        public virtual string Password { get; private set; } 
+        public virtual string Password { get; private set; }
+
+        [Required]
+        [JsonIgnore]
+        public virtual string Salt { get; private set; }
+
         [EmailAddress]
         public virtual string EmailAddress { get; set; }
         public virtual string Firstname { get;set; }
@@ -50,12 +56,18 @@ namespace Tea.Core.Domain
             return entry;
         }
 
-        public bool SetPassword(string newPassword)
+        //TODO we need to store this enyrpyted and also pass a salt in
+        public bool SetPassword(string newPassword, IPasswordHasher passwordHasher)
         {
             if (!newPassword.ValidatePassword()) 
                 return false;
 
-            Password = newPassword;
+            var passwordHash = passwordHasher.Hash(newPassword);
+            var parts = passwordHash.Split('.');
+
+            Password = parts[2].ToString();
+            Salt = parts[1].ToString();
+
             return true;
         }
 
@@ -82,21 +94,22 @@ namespace Tea.Core.Domain
             return entry;
         }
 
-        public static User CreateNewUser(string localizationString, string password)
+        public static User CreateNewUser(string localizationString)
         {
             var userId = Guid.NewGuid();
             var simpleId = Convert.ToBase64String(userId.ToByteArray());
 
-            return new User
+            var user =  new User
             {
                 Id = userId,
-                Password = password,
                 Localization = localizationString,
                 SimpleId = simpleId,
                 CurrentDayCount = 1,
                 LastBrewTimeUtc = DateTime.UtcNow,
                 CreatedUtc = DateTime.UtcNow
             };
+            
+            return user;
         }
 
         public static User CreateNewUser(string localizationString, string firstName, string surname)
@@ -117,20 +130,23 @@ namespace Tea.Core.Domain
             };
         }
 
-        public static User CreateLocalDevUser()
+        public static User CreateLocalDevUser(IPasswordHasher passwordHasher)
         {
             var userId = Guid.Parse("4f8c49ec-f7a9-487f-bf62-788dea8b095d");
             var simpleId = Convert.ToBase64String(userId.ToByteArray());
-
-            return new User
+            
+            var user = new User
             {
                 Id = userId,
-                Password = "TestPassword123*",
                 Localization = "en-GB",
                 SimpleId = simpleId,
                 CurrentDayCount = 1,
                 LastBrewTimeUtc = DateTime.UtcNow
             };
+
+            user.SetPassword("TestPassword123*", passwordHasher);
+
+            return user;
         }
     }
 }

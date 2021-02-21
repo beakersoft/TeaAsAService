@@ -12,16 +12,30 @@ namespace Tea.Core.Impl
     {
         private readonly TeaContext _context;
         private readonly ILogger<DataStore> _log;
+        private readonly IPasswordHasher _passwordHasher;
 
-        public DataStore(TeaContext context, ILogger<DataStore> log)
+        public DataStore(TeaContext context, IPasswordHasher passwordHasher, ILogger<DataStore> log)
         {
             _context = context;
+            _passwordHasher = passwordHasher;
             _log = log;
         }
 
         public async Task<User> AuthenticateAsync(string username, string password)
         {
-            var user = await _context.Users.SingleOrDefaultAsync(x => x.SimpleId == username && x.Password == password);
+            if (string.IsNullOrEmpty(username) || string.IsNullOrEmpty(password))
+                return null;
+
+            var user = await _context.Users.SingleOrDefaultAsync(x => x.SimpleId == username);
+
+            if (user == null)
+                return null;
+
+            var savedPassword = $"{user.Salt}.{user.Password}";
+
+            if (!_passwordHasher.Check(savedPassword, password))
+                return null;
+
             return user;
         }
 

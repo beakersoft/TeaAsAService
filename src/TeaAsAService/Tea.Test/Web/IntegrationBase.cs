@@ -1,7 +1,9 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Net.Http;
 using System.Threading.Tasks;
+using Tea.Core;
 using Tea.Core.Impl.Data;
 using Xunit;
 
@@ -24,7 +26,8 @@ namespace Tea.Test.Web
 
             //run the database seed
             var context = baseFixture.TestServer.Host.Services.GetRequiredService<TeaContext>();
-            DbInitializer.Initialize(context);
+            var passwordHashService = baseFixture.TestServer.Host.Services.GetRequiredService<IPasswordHasher>();
+            DbInitializer.Initialize(context, passwordHashService);
         }
 
         public IntegrationBase()

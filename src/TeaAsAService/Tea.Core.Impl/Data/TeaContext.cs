@@ -7,6 +7,8 @@ namespace Tea.Core.Impl.Data
     {
         public DbSet<User> Users { get; set; }
 
+        public TeaContext(){}
+
         public TeaContext(DbContextOptions<TeaContext> options) : base(options)
         {
         }        

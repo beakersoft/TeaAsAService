@@ -19,9 +19,6 @@ namespace Tea.Test.Middleware
     public class BasicAuthenticationHandlerFixture
     {
         private readonly Mock<IOptionsMonitor<AuthenticationSchemeOptions>> _options;
-        private readonly Mock<ILoggerFactory> _loggerFactory;
-        private readonly Mock<UrlEncoder> _encoder;
-        private readonly Mock<ISystemClock> _clock;
         private readonly Mock<IDataStore> _dataStore;
         private readonly BasicAuthenticationHandler _handler;
 
@@ -31,14 +28,14 @@ namespace Tea.Test.Middleware
             _options.Setup(x => x.Get(BasicAuthenticationHandler.SchemeName)).Returns(new AuthenticationSchemeOptions());
 
             var logger = new Mock<ILogger<BasicAuthenticationHandler>>();
-            _loggerFactory = new Mock<ILoggerFactory>();
-            _loggerFactory.Setup(x => x.CreateLogger(It.IsAny<string>())).Returns(logger.Object);
+            var loggerFactory = new Mock<ILoggerFactory>();
+            loggerFactory.Setup(x => x.CreateLogger(It.IsAny<string>())).Returns(logger.Object);
 
-            _encoder = new Mock<UrlEncoder>();
-            _clock = new Mock<ISystemClock>();
+            var encoder = new Mock<UrlEncoder>();
+            var clock = new Mock<ISystemClock>();
             _dataStore = new Mock<IDataStore>();
 
-            _handler = new BasicAuthenticationHandler(_options.Object, _loggerFactory.Object, _encoder.Object, _clock.Object, _dataStore.Object);
+            _handler = new BasicAuthenticationHandler(_options.Object, loggerFactory.Object, encoder.Object, clock.Object, _dataStore.Object);
         }
 
         [Fact]

@@ -1,6 +1,10 @@
 ﻿using System.Collections.Generic;
+using System.Dynamic;
 using System.Net.Http;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
+using Newtonsoft.Json.Linq;
 using Quibble.Xunit;
 using Tea.Core.Domain;
 using Tea.Web.Models;
@@ -25,9 +29,10 @@ namespace Tea.Test.Web
         {
             //call the create user so we have 2 people to add to the round
             var createUserResponse = await PostAndAssert($"{RootBrewApiPath }/newpersonhadbrew", _httpClient, true);
-            var user = Newtonsoft.Json.JsonConvert.DeserializeObject<User>(createUserResponse);
+            var converter = new ExpandoObjectConverter();
+            dynamic user = JsonConvert.DeserializeObject<ExpandoObject>(createUserResponse, converter);
 
-            var response = await PostAndAssert($"{RootRoundApiPath}/new", DummyRoundModel(user.SimpleId), _httpClient,true);
+            var response = await PostAndAssert($"{RootRoundApiPath}/new", DummyRoundModel(user.simpleId), _httpClient,true);
 
             JsonAssert.EqualOverrideDefault(@"
 {
@@ -43,14 +48,15 @@ namespace Tea.Test.Web
         public async Task EditRound_ReturnsRoundSummary()
         {
             var createUserResponse = await PostAndAssert($"{RootBrewApiPath}/newpersonhadbrew", _httpClient, true);
-            var user = Newtonsoft.Json.JsonConvert.DeserializeObject<User>(createUserResponse);
+            var converter = new ExpandoObjectConverter();
+            dynamic user = JsonConvert.DeserializeObject<ExpandoObject>(createUserResponse, converter);
 
-            var response = await PostAndAssert($"{RootRoundApiPath}/new", DummyRoundModel(user.SimpleId), _httpClient,
+            var response = await PostAndAssert($"{RootRoundApiPath}/new", DummyRoundModel(user.simpleId), _httpClient,
                 true);
 
             var createdRound = Newtonsoft.Json.JsonConvert.DeserializeObject<RoundSummaryModel>(response);
             
-            var roundToEdit = DummyRoundModel(user.SimpleId);
+            var roundToEdit = DummyRoundModel(user.simpleId);
             roundToEdit.Id = createdRound.Id;
             roundToEdit.RoundDescription = "I am an edit";
 
@@ -71,9 +77,10 @@ namespace Tea.Test.Web
         public async Task HadRound_WithValidModelReturns()
         {
             var createUserResponse = await PostAndAssert($"{RootBrewApiPath}/newpersonhadbrew", _httpClient, true);
-            var user = Newtonsoft.Json.JsonConvert.DeserializeObject<User>(createUserResponse);
+            var converter = new ExpandoObjectConverter();
+            dynamic user = JsonConvert.DeserializeObject<ExpandoObject>(createUserResponse, converter);
 
-            var response = await PostAndAssert($"{RootRoundApiPath}/new", DummyRoundModel(user.SimpleId), _httpClient,
+            var response = await PostAndAssert($"{RootRoundApiPath}/new", DummyRoundModel(user.simpleId), _httpClient,
                 true);
 
             var createdRound = Newtonsoft.Json.JsonConvert.DeserializeObject<RoundSummaryModel>(response);

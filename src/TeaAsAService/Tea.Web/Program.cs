@@ -42,7 +42,7 @@ namespace Tea.Web
                 try
                 {
                     var context = services.GetRequiredService<TeaContext>();
-                    DbInitializer.Initialize(context);
+                    DbInitializer.Initialize(context, null);
                 }
                 catch (Exception ex)
                 {

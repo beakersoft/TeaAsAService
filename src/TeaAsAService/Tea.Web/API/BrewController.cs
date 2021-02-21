@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Linq;
 using System.Threading.Tasks;
+using Tea.Core;
 using Tea.Core.Data;
 using Tea.Core.Impl.Services;
 using Tea.Web.Models;
@@ -15,11 +16,13 @@ namespace Tea.Web.API
     [ApiController]
     public class BrewController : BaseController
     {
-        private readonly IDataStore _dataStore; 
+        private readonly IDataStore _dataStore;
+        private readonly IPasswordHasher _passwordHasher;
 
-        public BrewController(IDataStore dataStore)
+        public BrewController(IDataStore dataStore, IPasswordHasher passwordHasher)
         {
             _dataStore = dataStore;
+            _passwordHasher = passwordHasher;
         }
 
         [HttpPost]
@@ -31,10 +34,21 @@ namespace Tea.Web.API
                 .AcceptLanguage.OrderByDescending(x=>x.Quality ?? 0.1).FirstOrDefault()?.Value.ToString()
                 ?? "en-GB";
             
-            var user = Core.Domain.User.CreateNewUser(localizationString, RandomPasswordGenerator.GeneratePassword(16));
+            var user = Core.Domain.User.CreateNewUser(localizationString);
+            var password = RandomPasswordGenerator.GeneratePassword(16);
+                        
+            if (!user.SetPassword(password, _passwordHasher))
+                return BadRequest("Could not set password");
+
             user = await _dataStore.CreateAsync(user);
 
-            return Ok(user);
+            return Ok(
+            new 
+            { 
+                user.Id,
+                user.SimpleId,
+                password
+            });    
         }
 
         [HttpPost]        

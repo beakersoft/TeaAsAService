@@ -42,6 +42,7 @@ namespace Tea.Web
                 .AddOptions()
                 .AddScoped<IDataStore, DataStore>()                
                 .AddSingleton<IRoundService, RoundService>()
+                .AddSingleton<IPasswordHasher,PasswordHasher>()
                 .AddApiVersioningConfig()
                 .AddRateLimiting(Configuration)
                 .AddSwagger()

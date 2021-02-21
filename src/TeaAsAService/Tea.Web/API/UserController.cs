@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Tea.Core.Data;
 using Tea.Web.Models;
+using Tea.Core;
 
 namespace Tea.Web.API
 {
@@ -15,10 +16,12 @@ namespace Tea.Web.API
     public class UserController : BaseController
     {
         private readonly IDataStore _dataStore;
+        private readonly IPasswordHasher _passwordHasher;
 
-        public UserController(IDataStore dataStore)
+        public UserController(IDataStore dataStore, IPasswordHasher passwordHasher)
         {
             _dataStore = dataStore;
+            _passwordHasher = passwordHasher;
         }
 
         [HttpPost]
@@ -37,7 +40,7 @@ namespace Tea.Web.API
             
             var user = Core.Domain.User.CreateNewUser(model.LocalizedString, model.Firstname, model.Surname);
 
-            if (!user.SetPassword(model.Password))
+            if (!user.SetPassword(model.Password, _passwordHasher))
                 return ReturnError(StatusCodes.Status400BadRequest, "Invalid Create User Request", "Password does not meet complexity requirements");
 
             if (!user.SetEmail(model.EmailAddress))
@@ -60,7 +63,7 @@ namespace Tea.Web.API
             if (user == null)
                return ReturnError(StatusCodes.Status404NotFound, "Invalid Update User Request", $"User {model.SimpleId} not found");
 
-            model.UpdateUserFromModel(user);
+            model.UpdateUserFromModel(user, _passwordHasher);
             await _dataStore.UpdateAsync(user);
 
             return Ok(user);
