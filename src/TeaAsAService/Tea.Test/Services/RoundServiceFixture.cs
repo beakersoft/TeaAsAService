@@ -31,7 +31,6 @@ namespace Tea.Test.Services
 
             Assert.True(res);
             _dataStore.Verify(x => x.CreateAsync(It.IsAny<RoundDetail>()), Times.Once);
-            
         }
 
         private Round DummyRound()

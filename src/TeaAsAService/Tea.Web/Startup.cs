@@ -35,8 +35,8 @@ namespace Tea.Web
                         .UseLazyLoadingProxies()
                         .UseMySQL(Configuration.GetConnectionString("DefaultConnection")));
             
-            services.AddAuthentication("BasicAuthentication")
-                .AddScheme<AuthenticationSchemeOptions, BasicAuthenticationHandler>("BasicAuthentication", null);
+            services.AddAuthentication(BasicAuthenticationHandler.SchemeName)
+                .AddScheme<AuthenticationSchemeOptions, BasicAuthenticationHandler>(BasicAuthenticationHandler.SchemeName, null);
 
             services
                 .AddOptions()
