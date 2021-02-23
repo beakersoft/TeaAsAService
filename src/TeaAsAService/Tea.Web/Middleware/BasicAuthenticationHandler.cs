@@ -11,12 +11,12 @@ using Microsoft.Extensions.Options;
 using Tea.Core.Data;
 using Tea.Core.Domain;
 
-namespace Tea.Web.Helpers
+namespace Tea.Web.Middleware
 {
     public class BasicAuthenticationHandler : AuthenticationHandler<AuthenticationSchemeOptions>
     {
         public static readonly string SchemeName = "BasicAuthentication";
-        private IDataStore _dataStore;
+        private readonly IDataStore _dataStore;
 
         public BasicAuthenticationHandler(
             IOptionsMonitor<AuthenticationSchemeOptions> options,
@@ -29,7 +29,7 @@ namespace Tea.Web.Helpers
             _dataStore = dataStore;
         }
 
-        protected async override Task<AuthenticateResult> HandleAuthenticateAsync()
+        protected override async Task<AuthenticateResult> HandleAuthenticateAsync()
         {
             if (!Request.Headers.ContainsKey("Authorization"))
             {

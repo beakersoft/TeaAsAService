@@ -11,21 +11,20 @@ using System.Text.Encodings.Web;
 using System.Threading.Tasks;
 using Tea.Core.Data;
 using Tea.Core.Domain;
-using Tea.Web.Helpers;
+using Tea.Web.Middleware;
 using Xunit;
 
 namespace Tea.Test.Middleware
 {
     public class BasicAuthenticationHandlerFixture
     {
-        private readonly Mock<IOptionsMonitor<AuthenticationSchemeOptions>> _options;
         private readonly Mock<IDataStore> _dataStore;
         private readonly BasicAuthenticationHandler _handler;
 
         public BasicAuthenticationHandlerFixture()
         {
-            _options = new Mock<IOptionsMonitor<AuthenticationSchemeOptions>>();
-            _options.Setup(x => x.Get(BasicAuthenticationHandler.SchemeName)).Returns(new AuthenticationSchemeOptions());
+            var options = new Mock<IOptionsMonitor<AuthenticationSchemeOptions>>();
+            options.Setup(x => x.Get(BasicAuthenticationHandler.SchemeName)).Returns(new AuthenticationSchemeOptions());
 
             var logger = new Mock<ILogger<BasicAuthenticationHandler>>();
             var loggerFactory = new Mock<ILoggerFactory>();
@@ -35,7 +34,7 @@ namespace Tea.Test.Middleware
             var clock = new Mock<ISystemClock>();
             _dataStore = new Mock<IDataStore>();
 
-            _handler = new BasicAuthenticationHandler(_options.Object, loggerFactory.Object, encoder.Object, clock.Object, _dataStore.Object);
+            _handler = new BasicAuthenticationHandler(options.Object, loggerFactory.Object, encoder.Object, clock.Object, _dataStore.Object);
         }
 
         [Fact]

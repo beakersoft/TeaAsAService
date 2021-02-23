@@ -10,14 +10,14 @@ namespace Tea.Test.Core.Entity
         public void NewUserCreates()
         {
             
-            var locstring = "en-GB";
+            var localstring = "en-GB";
             var firstName = "Joe";
             var surname = "Blogs";
-            var user = User.CreateNewUser(locstring, firstName, surname);
+            var user = User.CreateNewUser(localstring, firstName, surname);
 
             Assert.Equal(firstName, user.Firstname);
             Assert.Equal(surname, user.Surname);
-            Assert.Equal(locstring, user.Localization);
+            Assert.Equal(localstring, user.Localization);
         }
 
         [Fact]

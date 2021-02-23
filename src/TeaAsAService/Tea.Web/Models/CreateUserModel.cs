@@ -1,6 +1,4 @@
-﻿using System;
-using System.ComponentModel.DataAnnotations;
-using Tea.Core.Domain;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace Tea.Web.Models
 {
@@ -12,8 +10,6 @@ namespace Tea.Web.Models
         public string Surname { get; set; }
         public string EmailAddress { get; set; }
         public string LocalizedString { get; set; }
-        
-
     }
 }
 

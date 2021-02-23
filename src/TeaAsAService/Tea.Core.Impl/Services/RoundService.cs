@@ -37,7 +37,7 @@ namespace Tea.Core.Impl.Services
             return true;
         }
 
-        private async Task<List<User>> UpdateUsersFromNewRound(Round round, IDataStore dataStore)
+        private static async Task<List<User>> UpdateUsersFromNewRound(Round round, IDataStore dataStore)
         {
             var updatedUsers = new List<User>();
 

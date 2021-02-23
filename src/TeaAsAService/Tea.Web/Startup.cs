@@ -10,10 +10,11 @@ using Microsoft.AspNetCore.Mvc;
 using Tea.Core.Data;
 using Tea.Core.Impl;
 using Microsoft.AspNetCore.Authentication;
-using Tea.Web.Helpers;
 using AspNetCoreRateLimit;
+using NSwag.AspNetCore;
 using Tea.Core;
 using Tea.Core.Impl.Services;
+using Tea.Web.Middleware;
 
 namespace Tea.Web
 {
@@ -45,7 +46,7 @@ namespace Tea.Web
                 .AddSingleton<IPasswordHasher,PasswordHasher>()
                 .AddApiVersioningConfig()
                 .AddRateLimiting(Configuration)
-                .AddSwagger()
+                .AddSwagger("v1")
                 .AddApplicationHealthChecks(Configuration)
                 .AddHttpContextAccessor();           
 
@@ -70,21 +71,34 @@ namespace Tea.Web
             app.UseIpRateLimiting();
             app.UseHttpsRedirection();
             app.UseStaticFiles();
+
+            app.UseOpenApi(cfg =>
+            {
+                cfg.DocumentName = "v1";
+                cfg.Path = "/swagger/v1/swagger.json";
+            });
+
+            app.UseSwaggerUi3(config =>
+            {
+                config.SwaggerRoutes.Clear();
+
+                config.SwaggerRoutes.Add(new SwaggerUi3Route("v1", $"/swagger/v1/swagger.json"));
+
+                config.Path = "";
+                config.DocumentTitle = "TeaAsAService API Documentation";
+                config.DocExpansion = "list";
+                config.EnableTryItOut = true;
+                config.WithCredentials = true;
+            });
+
             app.UseRouting();
             app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapRazorPages();
                 endpoints.MapControllers();
                 endpoints.MapHealthChecks("/hc");
-            });
-
-            app.UseSwagger();
-            app.UseSwaggerUI(c =>
-            {
-                c.SwaggerEndpoint("./v1/swagger.json", "TeaAsAService");
             });
         }
     }

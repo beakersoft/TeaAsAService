@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.26124.0
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.31005.135
 MinimumVisualStudioVersion = 15.0.26124.0
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tea.Core", "Tea.Core\Tea.Core.csproj", "{CE7EBB52-4FAF-4480-BBA4-3E89AA47BE5E}"
 EndProject
@@ -9,7 +9,12 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tea.Test", "Tea.Test\Tea.Te
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tea.Web", "Tea.Web\Tea.Web.csproj", "{892CA723-3D48-4DF8-930C-3F18F0E3F2C5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tea.Core.Impl", "Tea.Core.Impl\Tea.Core.Impl.csproj", "{69F757D4-5E41-4A1F-85CD-5532A90D2B90}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tea.Core.Impl", "Tea.Core.Impl\Tea.Core.Impl.csproj", "{69F757D4-5E41-4A1F-85CD-5532A90D2B90}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{9FDCF3DC-5EB6-44A6-9512-71382F9EEC7E}"
+	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

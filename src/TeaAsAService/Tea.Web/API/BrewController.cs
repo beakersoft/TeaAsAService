@@ -10,6 +10,9 @@ using Tea.Web.Models;
 
 namespace Tea.Web.API
 {
+    /// <summary>
+    /// Manage brews for a person
+    /// </summary>
     [ApiVersion("1.0")]
     [Authorize]
     [Route("api/[controller]")]
@@ -25,6 +28,10 @@ namespace Tea.Web.API
             _passwordHasher = passwordHasher;
         }
 
+        /// <summary>
+        /// New person has had a brew. Creates a new users with a random username and password
+        /// </summary>
+        /// <returns></returns>
         [HttpPost]
         [AllowAnonymous]
         [Route("newpersonhadbrew")]

@@ -11,7 +11,7 @@ namespace Tea.Test.Services
 {
     public class RoundServiceFixture : IntegrationBase
     {
-        public readonly RoundService _service;
+        private readonly RoundService _service;
         private readonly Mock<IDataStore> _dataStore;
 
         public RoundServiceFixture()

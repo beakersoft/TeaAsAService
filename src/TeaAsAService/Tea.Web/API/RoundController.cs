@@ -57,6 +57,8 @@ namespace Tea.Web.API
             if (round == null)
                 return ReturnError(StatusCodes.Status404NotFound, "Invalid round edit request", $"Round {model.Id} not found");
 
+            //TODO make sure the person trying to update this round is in this round
+
             round = await model.UpdateRound(round, _dataStore);
             
             if (!model.IsRoundValid || round == null)
@@ -74,6 +76,8 @@ namespace Tea.Web.API
             if (!ModelState.IsValid)
                 return ReturnError(StatusCodes.Status400BadRequest, "Invalid had round request", GetModelStateMessages());
           
+            //TODO make sure the person trying to update this round is in this round
+
             var round = await _dataStore.GetAsync<Round>(model.Id);
 
             if (round == null)
@@ -88,6 +92,7 @@ namespace Tea.Web.API
         [Route("get/{id}")]
         public async Task<IActionResult> Get([FromRoute] Guid id)
         {
+            //TODO make sure the person trying to get this round is in this round
             var round = await _dataStore.GetAsync<Round>(id);
             return Ok(RoundSummaryModel.FromRound(round));
         }

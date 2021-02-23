@@ -11,8 +11,8 @@ namespace Tea.Web.API
 {
     [Route("api/[controller]")]
     [ApiController]
-    [ApiVersion("1.0")]
     [Authorize]
+    [ApiVersion("1.0")]
     public class UserController : BaseController
     {
         private readonly IDataStore _dataStore;
@@ -25,6 +25,7 @@ namespace Tea.Web.API
         }
 
         [HttpPost]
+        [AllowAnonymous]
         [Route("createuser")]
         public async Task<IActionResult> CreateUser([FromBody] CreateUserModel model)
         {
@@ -57,6 +58,8 @@ namespace Tea.Web.API
         {
             if (!ModelState.IsValid)
                 return ReturnError(StatusCodes.Status400BadRequest, "Invalid Update User Request", GetModelStateMessages());
+
+            //TODO make sure the person updating this user IS this user otherwise return access denide 
 
             var user = await _dataStore.GetUserBySimpleIdAsync(model.SimpleId);
 
