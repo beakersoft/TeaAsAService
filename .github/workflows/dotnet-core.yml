@@ -46,10 +46,12 @@ jobs:
     - name: XUnit Viewer
       id: xunit-viewer
       uses: AutoModality/action-xunit-viewer@v1
+      if: always()
       with:
         results: src/TeaAsAService/TestResults
     - name: Attach the report
       uses: actions/upload-artifact@v1
+      if: always()
       with:
           name: alternate-results-path-reports
           path: src/TeaAsAService/TestResults
