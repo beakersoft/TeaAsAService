@@ -43,18 +43,11 @@ jobs:
       env:
         GITHUB_BUILD: true
       run: dotnet test --logger trx --results-directory "TestResults"
-    - name: XUnit Viewer
-      id: xunit-viewer
-      uses: AutoModality/action-xunit-viewer@v1
+    - name: Publish Unit Test Results
+      uses: EnricoMi/publish-unit-test-result-action@v1
       if: always()
       with:
-        results: src/TeaAsAService/TestResults
-    - name: Attach the report
-      uses: actions/upload-artifact@v1
-      if: always()
-      with:
-          name: src/TeaAsAService/TestResults/*.trx
-          path: src/TeaAsAService/TestResults
+        files: src/TeaAsAService/TestResults/*.trx
 
 
 
