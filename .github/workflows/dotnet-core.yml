@@ -32,14 +32,21 @@ jobs:
         dotnet-version: 3.1.101
     - name: Install dependencies
       run: dotnet restore
-    - name: Build
+    - name: Build Solution
       run: dotnet build --configuration Release --no-restore
     #check mysql is up
     - name: Verify MySQL connection from host
       run: |
         sudo apt-get install -y mysql-client
         mysql --host 127.0.0.1 --port 3308 -uroot -pPassw0rd1* -e "SHOW DATABASES"
-    - name: Test
+    - name: Run Xunit Tests
       env:
         GITHUB_BUILD: true
-      run: dotnet test --no-restore --verbosity normal
+      run: dotnet test --logger trx --results-directory "TestResults"
+    - name: Upload dotnet test results
+      uses: actions/upload-artifact@v2
+        with:
+          name: dotnet-results-${{ matrix.dotnet-version }}
+          path: TestResults-${{ matrix.dotnet-version }}
+        # Use always() to always run this step to publish test results when there are test failures
+        if: ${{ always() }}
