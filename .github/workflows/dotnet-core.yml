@@ -32,14 +32,26 @@ jobs:
         dotnet-version: 3.1.101
     - name: Install dependencies
       run: dotnet restore
-    - name: Build
+    - name: Build Solution
       run: dotnet build --configuration Release --no-restore
     #check mysql is up
     - name: Verify MySQL connection from host
       run: |
         sudo apt-get install -y mysql-client
         mysql --host 127.0.0.1 --port 3308 -uroot -pPassw0rd1* -e "SHOW DATABASES"
-    - name: Test
+    - name: Run Xunit Tests
       env:
         GITHUB_BUILD: true
-      run: dotnet test --no-restore --verbosity normal
+      run: dotnet test --logger trx --results-directory ./TestResults
+      # Using the trx-parser action
+    - name: Parse Trx files
+      uses: NasAmin/trx-parser@v0.1.0
+      if: always()
+      id: trx-parser
+      with:
+        TRX_PATH: ${{ github.workspace }}/src/TeaAsAService/TestResults
+        REPO_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+
+      
+    
