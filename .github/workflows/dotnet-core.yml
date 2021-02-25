@@ -43,11 +43,18 @@ jobs:
       env:
         GITHUB_BUILD: true
       run: dotnet test --logger trx --results-directory "TestResults"
-    - name: Run ls
-      run: | 
-        ls -al
-    - name: Upload dotnet test results
-      uses: actions/upload-artifact@v2
-      if: always()
+    - name: XUnit Viewer
+      id: xunit-viewer
+      uses: AutoModality/action-xunit-viewer@v1
       with:
-        path: src/TeaAsAService/TestResults/*.*
+        results: src/TeaAsAService/TestResults
+    - name: Attach the report
+      uses: actions/upload-artifact@v1
+      with:
+          name: alternate-results-path-reports
+          path: src/TeaAsAService/TestResults
+
+
+
+      
+    
