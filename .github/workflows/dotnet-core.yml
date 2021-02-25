@@ -43,8 +43,11 @@ jobs:
       env:
         GITHUB_BUILD: true
       run: dotnet test --logger trx --results-directory "TestResults"
+    - name: Run ls
+      run: | 
+        ls -al
     - name: Upload dotnet test results
       uses: actions/upload-artifact@v2
       if: always()
       with:
-        path: TestResults/*.*
+        path: src/TeaAsAService/TestResults/*.*
