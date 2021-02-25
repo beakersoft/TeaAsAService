@@ -43,6 +43,7 @@ jobs:
       env:
         GITHUB_BUILD: true
       run: dotnet test --logger trx;LogFileName=TestResults.trx
+    - name: Upload dotnet test results
       uses: actions/upload-artifact@v2
       if: always()
       with:
