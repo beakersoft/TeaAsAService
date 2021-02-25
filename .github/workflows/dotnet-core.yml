@@ -42,7 +42,7 @@ jobs:
     - name: Run Xunit Tests
       env:
         GITHUB_BUILD: true
-      run: dotnet test --logger trx;LogFileName=TestOutput.xml --results-directory "TestResults"
+      run: dotnet test --logger trx --results-directory "TestResults"
     - name: XUnit Viewer
       id: xunit-viewer
       uses: AutoModality/action-xunit-viewer@v1
@@ -53,7 +53,7 @@ jobs:
       uses: actions/upload-artifact@v1
       if: always()
       with:
-          name: alternate-results-path-reports
+          name: src/TeaAsAService/TestResults/*.trx
           path: src/TeaAsAService/TestResults
 
 
