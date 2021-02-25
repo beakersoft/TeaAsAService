@@ -42,10 +42,9 @@ jobs:
     - name: Run Xunit Tests
       env:
         GITHUB_BUILD: true
-      run: dotnet test --logger trx;LogFileName=TestResults.trx
+      run: dotnet test --logger trx --results-directory "TestResults"
     - name: Upload dotnet test results
       uses: actions/upload-artifact@v2
       if: always()
       with:
-        name: dotnet-results
-        path: TestResults.trx
+        path: TestResults/*.*
