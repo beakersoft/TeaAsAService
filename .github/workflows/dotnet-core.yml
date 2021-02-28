@@ -43,12 +43,13 @@ jobs:
       env:
         GITHUB_BUILD: true
       run: dotnet test --logger trx --results-directory "TestResults"
-    # Using the trx-parser action
+      # Using the trx-parser action
     - name: Parse Trx files
       uses: NasAmin/trx-parser@v0.0.3
+      if: always()
       id: trx-parser
       with:
-        TRX_PATH: src/TeaAsAService/
+        TRX_PATH: src/TeaAsAService/TestResults/*.trx
         REPO_TOKEN: ${{ secrets.GITHUB_TOKEN }} 
 
 
