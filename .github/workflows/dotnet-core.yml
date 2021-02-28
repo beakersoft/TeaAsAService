@@ -49,7 +49,7 @@ jobs:
       if: always()
       id: trx-parser
       with:
-        TRX_PATH: ${{ github.workspace }}/TestResults
+        TRX_PATH: ${{ github.workspace }}/src/TeaAsAService/TestResults
 
 
       
