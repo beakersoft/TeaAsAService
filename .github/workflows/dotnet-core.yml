@@ -7,7 +7,7 @@ on:
     branches: [ master ]
 
 jobs:
-  build:
+  BuildAndTest:
 
     runs-on: ubuntu-latest
   
