@@ -6,6 +6,9 @@ using Microsoft.AspNetCore.Mvc;
 using Tea.Core.Data;
 using Tea.Web.Models;
 using Tea.Core;
+using Tea.Core.Extensions;
+using System;
+using Tea.Core.Domain;
 
 namespace Tea.Web.API
 {
@@ -59,9 +62,11 @@ namespace Tea.Web.API
             if (!ModelState.IsValid)
                 return ReturnError(StatusCodes.Status400BadRequest, "Invalid Update User Request", GetModelStateMessages());
 
-            //TODO make sure the person updating this user IS this user otherwise return access denide 
-
             var user = await _dataStore.GetUserBySimpleIdAsync(model.SimpleId);
+            var userId = Guid.Parse(User.GetUserId());
+
+            if (userId != user.Id)
+                return ReturnError(StatusCodes.Status403Forbidden, "Invalid Update User Request", $"Logged in user cant update {userId.ToString()}");
 
             if (user == null)
                return ReturnError(StatusCodes.Status404NotFound, "Invalid Update User Request", $"User {model.SimpleId} not found");
@@ -73,15 +78,13 @@ namespace Tea.Web.API
         }
 
         [HttpGet]
-        public async Task<IActionResult> Get(string id)
+        public async Task<IActionResult> Get()
         {
-            if (string.IsNullOrEmpty(id))
-                return ReturnError(StatusCodes.Status404NotFound, "Invalid User get Request", $"Please pass a user id");
-
-            var user = await _dataStore.GetUserBySimpleIdAsync(id);
+            var userId = Guid.Parse(User.GetUserId());
+            var user = await _dataStore.GetAsync<User>(userId);
 
             if (user == null)
-                return ReturnError(StatusCodes.Status404NotFound, "Invalid Update User Request", $"User {id} not found");
+                return ReturnError(StatusCodes.Status404NotFound, "Invalid Update User Request", $"User {userId.ToString()} not found");
 
             return Ok(user);
         }

@@ -36,7 +36,7 @@ namespace Tea.Web.Models
         public async Task<bool> ValidateRound(IDataStore dataStore)
         {
             var isValid = CheckUsersInRound(UsersInRound.Count);
-
+                       
             foreach (var user in UsersInRound)
             {
                 var roundUser = await dataStore.GetUserBySimpleIdAsync(user);

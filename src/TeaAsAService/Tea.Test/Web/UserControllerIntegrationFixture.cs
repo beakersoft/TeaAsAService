@@ -32,12 +32,6 @@ namespace Tea.Test.Web
         }
 
         [Fact]
-        public async Task Get_ReturnsNothingWithInValidUserId()
-        {
-            await GetAndAssert($"api/user?id=IamNotAUserId", _httpClient, false);
-        }
-
-        [Fact]
         public async Task UpdateUser_UpdatesWithValidModel()
         {
             var model = new UserUpdateModel

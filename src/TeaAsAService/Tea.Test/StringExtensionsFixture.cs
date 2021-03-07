@@ -1,9 +1,9 @@
 ﻿using Xunit;
-using Tea.Core;
+using Tea.Core.Extensions;
 
 namespace Tea.Test
 {
-    public class PasswordAndEmailValidationTests
+    public class StringExtensionsFixture
     {
         [Theory]
         [InlineData("Pass1!", false)]

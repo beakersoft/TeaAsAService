@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using Tea.Core.Extensions;
 
 namespace Tea.Core.Domain
 {
@@ -56,7 +57,6 @@ namespace Tea.Core.Domain
             return entry;
         }
 
-        //TODO we need to store this enyrpyted and also pass a salt in
         public bool SetPassword(string newPassword, IPasswordHasher passwordHasher)
         {
             if (!newPassword.ValidatePassword()) 

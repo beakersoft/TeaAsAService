@@ -57,7 +57,8 @@ namespace Tea.Web.API
             if (round == null)
                 return ReturnError(StatusCodes.Status404NotFound, "Invalid round edit request", $"Round {model.Id} not found");
 
-            //TODO make sure the person trying to update this round is in this round
+            if (!round.CanUpdateRound(User))
+                return ReturnError(StatusCodes.Status403Forbidden, "Invalid had round request", $"You are not allowed to update this round");
 
             round = await model.UpdateRound(round, _dataStore);
             
@@ -75,25 +76,29 @@ namespace Tea.Web.API
         {
             if (!ModelState.IsValid)
                 return ReturnError(StatusCodes.Status400BadRequest, "Invalid had round request", GetModelStateMessages());
-          
-            //TODO make sure the person trying to update this round is in this round
 
             var round = await _dataStore.GetAsync<Round>(model.Id);
 
             if (round == null)
                 return ReturnError(StatusCodes.Status404NotFound, "Invalid had round request", $"Round {model.Id} not found");
             
+            if(!round.CanUpdateRound(User))
+                return ReturnError(StatusCodes.Status403Forbidden, "Invalid had round request", $"You are not allowed to update this round");
+
             await _roundService.UpdateExistingRoundAsync(round, _dataStore,model.UserGettingRound,model.RoundNotes);
 
-            return Accepted(RoundSummaryModel.FromRound(round));
+            return Ok(RoundSummaryModel.FromRound(round));
         }
 
         [HttpGet]
         [Route("get/{id}")]
         public async Task<IActionResult> Get([FromRoute] Guid id)
         {
-            //TODO make sure the person trying to get this round is in this round
             var round = await _dataStore.GetAsync<Round>(id);
+
+            if (!round.CanUpdateRound(User))
+                return ReturnError(StatusCodes.Status403Forbidden, "Invalid had round request", "You are not to access this round");
+
             return Ok(RoundSummaryModel.FromRound(round));
         }
     }

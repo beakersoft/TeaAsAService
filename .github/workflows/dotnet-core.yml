@@ -7,7 +7,7 @@ on:
     branches: [ master ]
 
 jobs:
-  build:
+  BuildAndTest:
 
     runs-on: ubuntu-latest
   
@@ -45,7 +45,7 @@ jobs:
       run: dotnet test --logger trx --results-directory ./TestResults
       # Using the trx-parser action
     - name: Parse Trx files
-      uses: NasAmin/trx-parser@v0.0.3
+      uses: NasAmin/trx-parser@v0.1.0
       if: always()
       id: trx-parser
       with:

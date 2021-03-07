@@ -38,19 +38,20 @@ namespace Tea.Test.Web
             .UseStartup<Startup>();             //point to the web startup class
 
             TestServer = new TestServer(builder);
-            Client = TestServer.CreateClient();
-            SetupHttpHeaders();
+            Client = SetupHttpHeaders(TestServer.CreateClient(), HttpAuthUserName, HttpAuthPassword);
 
             Console.WriteLine("Test Server Started.");
         }
 
-        private void SetupHttpHeaders()
+        public HttpClient SetupHttpHeaders(HttpClient client, string username, string password)
         {
-            Client.DefaultRequestHeaders.Authorization =
+            client.DefaultRequestHeaders.Authorization =
             new AuthenticationHeaderValue(
                 "Basic", Convert.ToBase64String(
                     System.Text.Encoding.ASCII.GetBytes(
-                       $"{HttpAuthUserName}:{HttpAuthPassword}")));
+                       $"{username}:{password}")));
+
+            return client;
         }
 
         public void Dispose()

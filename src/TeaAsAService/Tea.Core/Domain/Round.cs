@@ -1,4 +1,7 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
+using System.Security.Claims;
+using Tea.Core.Extensions;
 
 namespace Tea.Core.Domain
 {
@@ -25,6 +28,16 @@ namespace Tea.Core.Domain
         public void RemoveUserFromRound(RoundUser user)
         {
             UsersInRound.Remove(user);
+        }
+
+        public bool CanUpdateRound(ClaimsPrincipal user)
+        {
+            var userId = user.GetUserId();
+
+            if (!UsersInRound.Any(x => x.User.Id.ToString() == userId))
+                return false;
+
+            return true;
         }
     }
 }

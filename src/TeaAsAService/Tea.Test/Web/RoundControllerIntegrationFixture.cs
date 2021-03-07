@@ -4,9 +4,7 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
-using Newtonsoft.Json.Linq;
 using Quibble.Xunit;
-using Tea.Core.Domain;
 using Tea.Web.Models;
 using Xunit;
 
@@ -146,7 +144,7 @@ namespace Tea.Test.Web
         {
             return new RoundModel
             {
-                UsersInRound = new List<string>{"7EmMT6n3f0i/YniN6osJXQ==", userId},
+                UsersInRound = new List<string>{ TestAuthSimpleUserId, userId},
                 RoundDescription = "Integration Test Round",
                 RoundLocationName = "Bespin Feasting Table"
             };

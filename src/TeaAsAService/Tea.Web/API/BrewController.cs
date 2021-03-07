@@ -7,6 +7,8 @@ using Tea.Core;
 using Tea.Core.Data;
 using Tea.Core.Impl.Services;
 using Tea.Web.Models;
+using Tea.Core.Extensions;
+using Tea.Core.Domain;
 
 namespace Tea.Web.API
 {
@@ -42,7 +44,7 @@ namespace Tea.Web.API
                 ?? "en-GB";
             
             var user = Core.Domain.User.CreateNewUser(localizationString);
-            var password = RandomPasswordGenerator.GeneratePassword(16);
+            var password = RandomPasswordGenerator.GeneratePassword();
                         
             if (!user.SetPassword(password, _passwordHasher))
                 return BadRequest("Could not set password");
@@ -62,14 +64,14 @@ namespace Tea.Web.API
         [Route("hadbrew")]
         public async Task<IActionResult> HadBrew([FromBody] UserHadBrewModel model)
         {
-            if(string.IsNullOrEmpty(model.UserId))           
-                return ReturnError(StatusCodes.Status400BadRequest, "Invalid HadBrew Request", "Please pass a user id");
-
-            var user = await _dataStore.GetUserBySimpleIdAsync(model.UserId);
+            var user = await _dataStore.GetAsync<User>(model.Id);
 
             if (user == null)
-                return ReturnError(StatusCodes.Status404NotFound, "Invalid HadBrew Request", $"User {model.UserId} not found");
-           
+                return ReturnError(StatusCodes.Status404NotFound, "Invalid HadBrew Request", $"User {model.Id} not found");
+
+            if (model.Id.ToString() != User.GetUserId())
+                return ReturnError(StatusCodes.Status403Forbidden, "Invalid HadBrew Request","Logged in user cant update that round");
+
             var historyEntry = user.UpdateBrewCount();
             if (historyEntry != null)
                 await _dataStore.CreateAsync(historyEntry);
