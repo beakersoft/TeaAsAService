@@ -22,7 +22,7 @@ namespace Tea.Test.Web
         }
 
         [Fact]
-        public async Task CreateNewUser_AndAddBrewToUser()
+        public async Task CreateNewUser()
         {
             //call the create user and parse to a user object
             var createUserResponse = await PostAndAssert($"{RootApiPath}/newpersonhadbrew", _httpClient, true);
@@ -32,20 +32,23 @@ namespace Tea.Test.Web
             Assert.NotNull(user.simpleId);
             Assert.NotNull(user.password);
             Assert.NotNull(user.id);
+        }
 
+        [Fact]
+        public async Task AddBrewToUser()
+        {
             var hadBrewModel = new UserHadBrewModel
             {
-                Id = Guid.Parse(user.id)
+                Id = TestAuthUserId
             };
 
-            //update the auth headers for our new person
-            _httpClient = TestServerBase.SetupHttpHeaders(_httpClient, user.simpleId, user.password);
-
             var updatebrewCountResponse = await PostAndAssert($"{RootApiPath}/hadbrew", hadBrewModel, _httpClient, true);
-            user = JsonConvert.DeserializeObject<User>(updatebrewCountResponse);
+            var user = JsonConvert.DeserializeObject<User>(updatebrewCountResponse);
 
             Assert.NotNull(user?.SimpleId);
-            Assert.Equal(2, user.CurrentDayCount);
+            Assert.Equal(TestAuthUserId, user.Id);
+            Assert.True(user.CurrentDayCount > 1);
+
         }
     }
 }
