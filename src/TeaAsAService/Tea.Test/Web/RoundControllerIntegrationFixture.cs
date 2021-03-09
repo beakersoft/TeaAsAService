@@ -130,7 +130,7 @@ namespace Tea.Test.Web
             var response = await PostAndAssert($"{RootRoundApiPath}/new",DummyRoundModel("NotAUser") , _httpClient,false);
 
             JsonAssert.EqualOverrideDefault(@"{
-    ""title"": ""Invalid round creation request"",
+    ""title"": ""Invalid RoundNew Request"",
     ""status"": 400,
     ""detail"": ""User with id NotAUser was not found"",
     ""instance"": ""/api/round/new""
