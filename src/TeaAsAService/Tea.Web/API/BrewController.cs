@@ -34,33 +34,47 @@ namespace Tea.Web.API
         /// New person has had a brew. Creates a new users with a random username and password
         /// </summary>
         /// <returns></returns>
+        /// <response code="200">Succesful NewPersonHadBrew Request</response>
+        /// <response code="400">Invalid NewPersonHadBrew Request</response>
+        [ProducesResponseType(typeof(object), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
         [HttpPost]
         [AllowAnonymous]
         [Route("newpersonhadbrew")]
         public async Task<IActionResult> NewPersonHadBrew()
         {
             var localizationString = HttpContext.Request.GetTypedHeaders()
-                .AcceptLanguage.OrderByDescending(x=>x.Quality ?? 0.1).FirstOrDefault()?.Value.ToString()
+                .AcceptLanguage.OrderByDescending(x => x.Quality ?? 0.1).FirstOrDefault()?.Value.ToString()
                 ?? "en-GB";
-            
+
             var user = Core.Domain.User.CreateNewUser(localizationString);
             var password = RandomPasswordGenerator.GeneratePassword();
-                        
+
             if (!user.SetPassword(password, _passwordHasher))
                 return BadRequest("Could not set password");
 
             user = await _dataStore.CreateAsync(user);
 
             return Ok(
-            new 
-            { 
+            new
+            {
                 user.Id,
                 user.SimpleId,
                 password
-            });    
+            });
         }
 
-        [HttpPost]        
+        /// <summary>
+        /// Registers that person has had a brew.
+        /// </summary>
+        /// <returns></returns>
+        /// <response code="200">Succesful HadBrew Request</response>
+        /// <response code="403">Forbidden HadBrew Request</response>
+        /// <response code="404">Invalid HadBrew Request</response>
+        [ProducesResponseType(typeof(object), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(string), StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
+        [HttpPost]
         [Route("hadbrew")]
         public async Task<IActionResult> HadBrew([FromBody] UserHadBrewModel model)
         {
@@ -70,12 +84,12 @@ namespace Tea.Web.API
                 return ReturnError(StatusCodes.Status404NotFound, "Invalid HadBrew Request", $"User {model.Id} not found");
 
             if (model.Id.ToString() != User.GetUserId())
-                return ReturnError(StatusCodes.Status403Forbidden, "Invalid HadBrew Request","Logged in user cant update that round");
+                return ReturnError(StatusCodes.Status403Forbidden, "Invalid HadBrew Request", "Logged in user cant update that round");
 
             var historyEntry = user.UpdateBrewCount();
             if (historyEntry != null)
                 await _dataStore.CreateAsync(historyEntry);
-            
+
             user = await _dataStore.UpdateAsync(user);
 
             return Ok(user);

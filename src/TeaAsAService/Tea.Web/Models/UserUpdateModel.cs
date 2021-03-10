@@ -9,6 +9,10 @@ namespace Tea.Web.Models
     {
         [Required]
         public string SimpleId { get; set; }
+        /// <summary>
+        /// Must have at least one upper case letter, lower case letter and a digit.
+        /// </summary>
+        [MinLength(8)]
         public string Password { get; set; }
         [EmailAddress]
         public string EmailAddress { get; set; }
