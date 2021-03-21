@@ -77,7 +77,7 @@ Error responses are returned as **application/problem+json** responses as decrib
         {
             services
                 .AddHealthChecks()
-        // Add a health check for a SQL Server database
+        // Add a health check for a My Sql database
         .AddCheck(
             "TeasAsAServiceDB-check",
             new DatabaseHealthCheck(configuration.GetConnectionString("DefaultConnection")),

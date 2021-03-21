@@ -10,12 +10,19 @@ namespace Tea.Core.Impl.Data
         {
             context.Database.EnsureCreated();
 
-            if (context.Users.Any())            
-                return;   // DB has been seeded
-
-            if (passwordHasher != null)
+            if (!context.Users.Any()) //LPN only do this in test and dev
             {
-                context.Users.Add(User.CreateLocalDevUser(passwordHasher));
+                if (passwordHasher != null)
+                {
+                    context.Users.Add(User.CreateLocalDevUser(passwordHasher));
+                    context.SaveChanges();
+                }
+            }
+
+            //create the default drink set
+            if (!context.Drink.Any())
+            {
+                context.Drink.AddRange(Drink.DefaultDrinks());
                 context.SaveChanges();
             }
         }
